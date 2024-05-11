@@ -3,6 +3,8 @@ package com.example.SoftwareEngineering_Project.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity(name = "reviews")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +19,11 @@ public class ReviewEntity {
     private String content;
     private String image;
     private int likes = 0;
+    private LocalDateTime statusDateTime;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

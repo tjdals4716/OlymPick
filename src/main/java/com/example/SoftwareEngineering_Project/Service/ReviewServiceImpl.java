@@ -3,13 +3,16 @@ package com.example.SoftwareEngineering_Project.Service;
 import com.example.SoftwareEngineering_Project.DTO.ReviewDTO;
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
 import com.example.SoftwareEngineering_Project.Entity.ReviewEntity;
+import com.example.SoftwareEngineering_Project.Entity.UserEntity;
 import com.example.SoftwareEngineering_Project.Repository.ProductRepository;
 import com.example.SoftwareEngineering_Project.Repository.ReviewRepository;
+import com.example.SoftwareEngineering_Project.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,14 +22,19 @@ public class ReviewServiceImpl implements ReviewService {
 
     private static final Logger logger = LoggerFactory.getLogger(ReviewServiceImpl.class);
     private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
     //리뷰 작성
     @Override
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
+        UserEntity user = userRepository.findById(reviewDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. id: " + reviewDTO.getUserId()));
         ProductEntity product = productRepository.findById(reviewDTO.getProductId())
                 .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다. id: " + reviewDTO.getProductId()));
-        ReviewEntity reviewEntity = reviewDTO.dtoToEntity(product);
+
+        ReviewEntity reviewEntity = reviewDTO.dtoToEntity(user, product);
+        reviewEntity.setStatusDateTime(LocalDateTime.now());
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
         logger.info("리뷰 작성 완료! " + savedReview);
         return ReviewDTO.entityToDto(savedReview);
@@ -55,6 +63,17 @@ public class ReviewServiceImpl implements ReviewService {
         ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다. id: " + productId));
         List<ReviewEntity> reviewEntities = reviewRepository.findByProduct(product);
+        return reviewEntities.stream()
+                .map(ReviewDTO::entityToDto)
+                .collect(Collectors.toList());
+    }
+
+    //특정 유저가 작성한 리뷰 조회
+    @Override
+    public List<ReviewDTO> getReviewsByUserId(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. id: " + userId));
+        List<ReviewEntity> reviewEntities = reviewRepository.findByUser(user);
         return reviewEntities.stream()
                 .map(ReviewDTO::entityToDto)
                 .collect(Collectors.toList());

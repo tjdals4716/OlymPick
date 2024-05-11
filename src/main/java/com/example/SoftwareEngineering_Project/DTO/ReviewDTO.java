@@ -2,7 +2,10 @@ package com.example.SoftwareEngineering_Project.DTO;
 
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
 import com.example.SoftwareEngineering_Project.Entity.ReviewEntity;
+import com.example.SoftwareEngineering_Project.Entity.UserEntity;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +18,8 @@ public class ReviewDTO {
     private String content;
     private String image;
     private int likes;
+    private LocalDateTime statusDateTime;
+    private Long userId;
     private Long productId;
 
     public static ReviewDTO entityToDto(ReviewEntity reviewEntity) {
@@ -24,12 +29,14 @@ public class ReviewDTO {
                 reviewEntity.getContent(),
                 reviewEntity.getImage(),
                 reviewEntity.getLikes(),
+                reviewEntity.getStatusDateTime(),
+                reviewEntity.getUser().getId(),
                 reviewEntity.getProduct().getId()
         );
     }
 
-    public ReviewEntity dtoToEntity(ProductEntity product){
-        return new ReviewEntity(id, title, content, image, likes, product);
+    public ReviewEntity dtoToEntity(UserEntity user, ProductEntity product){
+        return new ReviewEntity(id, title, content, image, likes, statusDateTime, user, product);
     }
 }
 
