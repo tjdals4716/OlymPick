@@ -17,18 +17,21 @@ public class ProductController {
 
     private final ProductService productService;
 
+    //상품 등록
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         ProductDTO createdProduct = productService.createProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
+    //상품 장바구니에 담기, 동일한 상품일 경우 개수만 증가
     @PostMapping("/basket/{userId}/{productId}")
     public ResponseEntity<BasketDTO> addToBasket(@PathVariable Long productId, @PathVariable Long userId) {
         BasketDTO basketDTO = productService.addToBasket(userId, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(basketDTO);
     }
 
+    //상품 장바구니에서 빼기, 동일한 상품일 경우 개수만 감소, 1에서 뺄 경우 장바구니에서 상품 삭제
     @DeleteMapping("/basket/{userId}/{productId}")
     public ResponseEntity<BasketDTO> removeFromBasket(@PathVariable Long productId, @PathVariable Long userId) {
         BasketDTO basketDTO = productService.removeFromBasket(userId, productId);
@@ -39,36 +42,42 @@ public class ProductController {
         }
     }
 
+    //모든 상품 조회
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
+    //해당 상품만 조회
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         ProductDTO product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
+    //상품 수정
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(updatedProduct);
     }
 
+    //상품 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
+    //카테고리별 상품 조회
     @GetMapping("/category/{category}")
     public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable String category) {
         List<ProductDTO> products = productService.getProductsByCategory(category);
         return ResponseEntity.ok(products);
     }
 
+    //상품 검색
     @GetMapping("/search")
     public ResponseEntity<List<ProductDTO>> searchProductsByName(@RequestParam("name") String name) {
         List<ProductDTO> products = productService.searchProductsByName(name);

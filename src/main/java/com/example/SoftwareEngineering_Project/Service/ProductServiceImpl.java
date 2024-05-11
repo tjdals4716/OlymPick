@@ -93,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    //상품 조회
+    //해당 상품만 조회
     @Override
     public ProductDTO getProductById(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
@@ -132,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
         logger.info("상품 삭제 완료! id: " + id);
     }
 
-    //상품 카테고리별 조회
+    //카테고리별 상품 조회
     @Override
     public List<ProductDTO> getProductsByCategory(String category) {
         List<ProductEntity> products = productRepository.findByCategory(category);
