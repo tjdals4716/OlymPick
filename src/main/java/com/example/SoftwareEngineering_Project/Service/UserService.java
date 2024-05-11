@@ -7,4 +7,7 @@ public interface UserService {
     UserDTO getUserByUid(String uid);
     boolean isUidDuplicate(String uid);
     boolean isNicknameDuplicate(String nickname);
+    UserDTO updateUser(String uid, UserDTO userDTO);
+    void deleteUser(String uid);
+    UserDTO login(String uid, String password);
 }

@@ -20,6 +20,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
+        UserDTO loggedInUser = userService.login(userDTO.getUid(), userDTO.getPassword());
+        return ResponseEntity.ok(loggedInUser);
+    }
+
     @GetMapping("/{uid}")
     public ResponseEntity<UserDTO> getUserByUid(@PathVariable String uid) {
         UserDTO user = userService.getUserByUid(uid);
@@ -36,5 +42,17 @@ public class UserController {
     public ResponseEntity<Boolean> isNicknameDuplicate(@RequestParam String nickname) {
         boolean isDuplicate = userService.isNicknameDuplicate(nickname);
         return ResponseEntity.ok(isDuplicate);
+    }
+
+    @PutMapping("/{uid}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable String uid, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userService.updateUser(uid, userDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/{uid}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String uid) {
+        userService.deleteUser(uid);
+        return ResponseEntity.noContent().build();
     }
 }

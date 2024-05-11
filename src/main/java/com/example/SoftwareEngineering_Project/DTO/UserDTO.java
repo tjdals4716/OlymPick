@@ -13,17 +13,23 @@ public class UserDTO {
     private String uid;
     private String password;
     private String nickname;
+    private String gender;
+    private String age;
+    private String mbti;
 
     public static UserDTO entityToDto(UserEntity userEntity) {
         return new UserDTO(
                 userEntity.getId(),
                 userEntity.getUid(),
                 userEntity.getPassword(),
-                userEntity.getNickname()
+                userEntity.getNickname(),
+                userEntity.getGender(),
+                userEntity.getAge(),
+                userEntity.getMbti()
         );
     }
 
     public UserEntity dtoToEntity(){
-        return new UserEntity(id, uid, password, nickname);
+        return new UserEntity(id, uid, password, nickname, gender, age, mbti);
     }
 }

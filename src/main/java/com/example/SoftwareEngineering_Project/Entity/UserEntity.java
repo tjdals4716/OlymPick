@@ -1,6 +1,5 @@
 package com.example.SoftwareEngineering_Project.Entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,4 +22,13 @@ public class UserEntity {
 
     @Column(name = "nickname")
     private String nickname;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "age")
+    private String age;
+
+    @Column(name = "mbti")
+    private String mbti;
 }
