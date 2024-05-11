@@ -1,5 +1,6 @@
 package com.example.SoftwareEngineering_Project.Service;
 
+import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
 
@@ -13,4 +14,6 @@ public interface ProductService {
     void deleteProduct(Long id);
     List<ProductDTO> getProductsByCategory(String category);
     List<ProductDTO> searchProductsByName(String name);
+    BasketDTO addToBasket(Long userId, Long productId);
+    BasketDTO removeFromBasket(Long userId, Long productId);
 }

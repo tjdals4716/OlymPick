@@ -1,5 +1,6 @@
 package com.example.SoftwareEngineering_Project.Controller;
 
+import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
 import com.example.SoftwareEngineering_Project.Service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,22 @@ public class ProductController {
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         ProductDTO createdProduct = productService.createProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+    }
+
+    @PostMapping("/basket/{userId}/{productId}")
+    public ResponseEntity<BasketDTO> addToBasket(@PathVariable Long productId, @PathVariable Long userId) {
+        BasketDTO basketDTO = productService.addToBasket(userId, productId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(basketDTO);
+    }
+
+    @DeleteMapping("/basket/{userId}/{productId}")
+    public ResponseEntity<BasketDTO> removeFromBasket(@PathVariable Long productId, @PathVariable Long userId) {
+        BasketDTO basketDTO = productService.removeFromBasket(userId, productId);
+        if (basketDTO != null) {
+            return ResponseEntity.ok(basketDTO);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @GetMapping
