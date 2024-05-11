@@ -4,7 +4,7 @@ import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
 
 import java.util.List;
-//
+
 public interface ProductService {
     ProductDTO createProduct(ProductDTO productDTO);
     List<ProductDTO> getAllProducts();
