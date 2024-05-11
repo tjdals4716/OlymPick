@@ -90,6 +90,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    //사용자 장바구니에 있는 상품 배송
     @Override
     public List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status) {
         UserEntity user = userRepository.findById(userId)
@@ -111,11 +112,13 @@ public class ProductServiceImpl implements ProductService {
 
         List<DeliveryEntity> savedDeliveries = deliveryRepository.saveAll(deliveryEntities);
 
+        logger.info("장바구니에 담긴 모든 상품의 배송이 시작되었습니다.");
         return savedDeliveries.stream()
                 .map(DeliveryDTO::entityToDto)
                 .collect(Collectors.toList());
     }
 
+    //배송 상태 수정
     @Override
     public DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status) {
         DeliveryEntity deliveryEntity = deliveryRepository.findById(deliveryId)
@@ -126,6 +129,7 @@ public class ProductServiceImpl implements ProductService {
 
         DeliveryEntity updatedDelivery = deliveryRepository.save(deliveryEntity);
 
+        logger.info("상품의 배송상태가 변경되었습니다!");
         return DeliveryDTO.entityToDto(updatedDelivery);
     }
 
