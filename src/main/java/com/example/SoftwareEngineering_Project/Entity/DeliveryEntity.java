@@ -17,6 +17,10 @@ public class DeliveryEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+    @ManyToOne
     @JoinColumn(name = "basket_id")
     private BasketEntity basket;
 

@@ -90,25 +90,32 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    //장바구니에 있는 상품 배송
     @Override
-    public DeliveryDTO createDelivery(Long basketId, DeliveryStatus status) {
-        BasketEntity basket = basketRepository.findById(basketId)
-                .orElseThrow(() -> new RuntimeException("장바구니를 찾을 수 없습니다. basketId: " + basketId));
+    public List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + userId));
 
-        DeliveryDTO deliveryDTO = new DeliveryDTO();
-        deliveryDTO.setBasketId(basketId);
-        deliveryDTO.setStatus(status);
-        deliveryDTO.setStatusDateTime(LocalDateTime.now());
+        List<BasketEntity> baskets = basketRepository.findByUser_Id(userId);
 
-        DeliveryEntity deliveryEntity = deliveryDTO.dtoToEntity(basket, status);
-        DeliveryEntity savedDelivery = deliveryRepository.save(deliveryEntity);
+        List<DeliveryEntity> deliveryEntities = baskets.stream()
+                .map(basket -> {
+                    DeliveryDTO deliveryDTO = new DeliveryDTO();
+                    deliveryDTO.setUserId(userId);
+                    deliveryDTO.setBasketId(basket.getId());
+                    deliveryDTO.setStatus(status);
+                    deliveryDTO.setStatusDateTime(LocalDateTime.now());
 
-        logger.info("장바구니 상품 배송이 시작되었습니다");
-        return DeliveryDTO.entityToDto(savedDelivery);
+                    return deliveryDTO.dtoToEntity(user, basket, status);
+                })
+                .collect(Collectors.toList());
+
+        List<DeliveryEntity> savedDeliveries = deliveryRepository.saveAll(deliveryEntities);
+
+        return savedDeliveries.stream()
+                .map(DeliveryDTO::entityToDto)
+                .collect(Collectors.toList());
     }
 
-    //배송 상태 수정
     @Override
     public DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status) {
         DeliveryEntity deliveryEntity = deliveryRepository.findById(deliveryId)
@@ -119,7 +126,6 @@ public class ProductServiceImpl implements ProductService {
 
         DeliveryEntity updatedDelivery = deliveryRepository.save(deliveryEntity);
 
-        logger.info("배송사항이 변경되었습니다");
         return DeliveryDTO.entityToDto(updatedDelivery);
     }
 

@@ -18,6 +18,6 @@ public interface ProductService {
     List<ProductDTO> searchProductsByName(String name);
     BasketDTO addToBasket(Long userId, Long productId);
     BasketDTO removeFromBasket(Long userId, Long productId);
-    DeliveryDTO createDelivery(Long basketId, DeliveryStatus status);
+    List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status);
     DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status);
 }

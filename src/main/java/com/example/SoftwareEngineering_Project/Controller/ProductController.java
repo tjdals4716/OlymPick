@@ -3,6 +3,7 @@ package com.example.SoftwareEngineering_Project.Controller;
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
 import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
+import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import com.example.SoftwareEngineering_Project.Service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/products")
@@ -44,10 +46,14 @@ public class ProductController {
     }
 
     //장바구니에 있는 상품 배송
-    @PostMapping("/delivery/{basketId}")
-    public ResponseEntity<DeliveryDTO> createDelivery(@PathVariable Long basketId, @RequestBody DeliveryDTO deliveryDTO) {
-        DeliveryDTO delivery = productService.createDelivery(basketId, deliveryDTO.getStatus());
-        return ResponseEntity.ok(delivery);
+    @PostMapping("/delivery/basket")
+    public ResponseEntity<List<DeliveryDTO>> createDeliveryForBasket(@RequestBody Map<String, Object> requestBody) {
+        Long userId = ((Number) requestBody.get("userId")).longValue();
+        String statusString = (String) requestBody.get("status");
+        DeliveryStatus status = DeliveryStatus.valueOf(statusString);
+
+        List<DeliveryDTO> createdDeliveries = productService.createDeliveryForBasket(userId, status);
+        return ResponseEntity.ok(createdDeliveries);
     }
 
     //배송 상태 수정
