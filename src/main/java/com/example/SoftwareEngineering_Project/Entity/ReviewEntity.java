@@ -16,7 +16,7 @@ public class ReviewEntity {
     private String title;
     private String content;
     private String image;
-    private String likes;
+    private int likes = 0;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

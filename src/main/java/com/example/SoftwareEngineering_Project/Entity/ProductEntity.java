@@ -17,7 +17,6 @@ public class ProductEntity {
     private String content;
     private String price;
     private String image;
-    private String likes;
     private String category;
 
     @ManyToOne

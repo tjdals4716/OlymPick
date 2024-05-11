@@ -14,7 +14,7 @@ public class ReviewDTO {
     private String title;
     private String content;
     private String image;
-    private String likes;
+    private int likes;
     private Long productId;
 
     public static ReviewDTO entityToDto(ReviewEntity reviewEntity) {
