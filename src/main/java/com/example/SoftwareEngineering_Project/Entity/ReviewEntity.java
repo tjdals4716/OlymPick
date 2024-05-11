@@ -3,20 +3,22 @@ package com.example.SoftwareEngineering_Project.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "users")
+@Entity(name = "reviews")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class UserEntity {
+public class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String uid;
-    private String password;
-    private String nickname;
-    private String gender;
-    private String age;
-    private String mbti;
+    private String title;
+    private String content;
+    private String image;
+    private String likes;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private ProductEntity product;
 }
