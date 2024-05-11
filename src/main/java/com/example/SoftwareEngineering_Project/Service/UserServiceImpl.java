@@ -17,6 +17,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    //회원가입
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         if (isUidDuplicate(userDTO.getUid())) {
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
         return UserDTO.entityToDto(savedUser);
     }
 
+    //회원 조회
     @Override
     public UserDTO getUserByUid(String uid) {
         UserEntity userEntity = userRepository.findByUid(uid)
@@ -38,16 +40,19 @@ public class UserServiceImpl implements UserService {
         return UserDTO.entityToDto(userEntity);
     }
 
+    //아이디 중복 확인
     @Override
     public boolean isUidDuplicate(String uid) {
         return userRepository.existsByUid(uid);
     }
 
+    //닉네임 중복 확인
     @Override
     public boolean isNicknameDuplicate(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 
+    //로그인
     @Override
     public UserDTO login(String uid, String password) {
         UserEntity userEntity = userRepository.findByUid(uid)
@@ -60,6 +65,7 @@ public class UserServiceImpl implements UserService {
         return UserDTO.entityToDto(userEntity);
     }
 
+    //회원 정보 수정
     @Override
     public UserDTO updateUser(String uid, UserDTO userDTO) {
         UserEntity userEntity = userRepository.findByUid(uid)
@@ -76,6 +82,7 @@ public class UserServiceImpl implements UserService {
         return UserDTO.entityToDto(updatedUser);
     }
 
+    //회원 탈퇴
     @Override
     public void deleteUser(String uid) {
         UserEntity userEntity = userRepository.findByUid(uid)

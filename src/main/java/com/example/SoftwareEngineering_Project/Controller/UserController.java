@@ -14,42 +14,49 @@ public class UserController {
 
     private final UserService userService;
 
+    //회원 가입
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+    //로그인
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
         UserDTO loggedInUser = userService.login(userDTO.getUid(), userDTO.getPassword());
         return ResponseEntity.ok(loggedInUser);
     }
 
+    //유저 조회
     @GetMapping("/{uid}")
     public ResponseEntity<UserDTO> getUserByUid(@PathVariable String uid) {
         UserDTO user = userService.getUserByUid(uid);
         return ResponseEntity.ok(user);
     }
 
+    //아이디 중복 확인
     @GetMapping("/check-uid")
     public ResponseEntity<Boolean> isUidDuplicate(@RequestParam String uid) {
         boolean isDuplicate = userService.isUidDuplicate(uid);
         return ResponseEntity.ok(isDuplicate);
     }
 
+    //닉네임 중복 확인
     @GetMapping("/check-nickname")
     public ResponseEntity<Boolean> isNicknameDuplicate(@RequestParam String nickname) {
         boolean isDuplicate = userService.isNicknameDuplicate(nickname);
         return ResponseEntity.ok(isDuplicate);
     }
 
+    //회원 정보 수정
     @PutMapping("/{uid}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable String uid, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(uid, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
+    //회원 탈퇴
     @DeleteMapping("/{uid}")
     public ResponseEntity<Void> deleteUser(@PathVariable String uid) {
         userService.deleteUser(uid);
