@@ -21,6 +21,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
 
+    //리뷰 작성
     @Override
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
         ProductEntity product = productRepository.findById(reviewDTO.getProductId())
@@ -31,6 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewDTO.entityToDto(savedReview);
     }
 
+    //리뷰 조회
     @Override
     public ReviewDTO getReviewById(Long id) {
         ReviewEntity reviewEntity = reviewRepository.findById(id)
@@ -38,6 +40,7 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewDTO.entityToDto(reviewEntity);
     }
 
+    //모든 리뷰 조회
     @Override
     public List<ReviewDTO> getAllReviews() {
         List<ReviewEntity> reviewEntities = reviewRepository.findAll();
@@ -46,6 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
+    //해당 상품에 대한 리뷰 조회
     @Override
     public List<ReviewDTO> getReviewsByProductId(Long productId) {
         ProductEntity product = productRepository.findById(productId)
@@ -56,6 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
+    //리뷰 수정
     @Override
     public ReviewDTO updateReview(Long id, ReviewDTO reviewDTO) {
         ReviewEntity reviewEntity = reviewRepository.findById(id)
@@ -74,6 +79,7 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewDTO.entityToDto(updatedReview);
     }
 
+    //리뷰 삭제
     @Override
     public void deleteReview(Long id) {
         ReviewEntity reviewEntity = reviewRepository.findById(id)

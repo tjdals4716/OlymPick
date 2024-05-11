@@ -16,36 +16,42 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    //리뷰 작성
     @PostMapping
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) {
         ReviewDTO createdReview = reviewService.createReview(reviewDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 
+    //리뷰 조회
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
         ReviewDTO review = reviewService.getReviewById(id);
         return ResponseEntity.ok(review);
     }
 
+    //모든 리뷰 조회
     @GetMapping
     public ResponseEntity<List<ReviewDTO>> getAllReviews() {
         List<ReviewDTO> reviews = reviewService.getAllReviews();
         return ResponseEntity.ok(reviews);
     }
 
+    //해당 상품에 대한 리뷰 조회
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<ReviewDTO>> getReviewsByProductId(@PathVariable Long productId) {
         List<ReviewDTO> reviews = reviewService.getReviewsByProductId(productId);
         return ResponseEntity.ok(reviews);
     }
 
+    //리뷰 수정
     @PutMapping("/{id}")
     public ResponseEntity<ReviewDTO> updateReview(@PathVariable Long id, @RequestBody ReviewDTO reviewDTO) {
         ReviewDTO updatedReview = reviewService.updateReview(id, reviewDTO);
         return ResponseEntity.ok(updatedReview);
     }
 
+    //리뷰 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
