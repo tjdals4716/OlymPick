@@ -18,7 +18,7 @@ public class ProductDTO {
     private String image;
     private String category;
     private Long userId;
-
+//
     public static ProductDTO entityToDto(ProductEntity productEntity) {
         return new ProductDTO(
                 productEntity.getId(),

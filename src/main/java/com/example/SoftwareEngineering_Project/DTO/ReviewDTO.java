@@ -16,7 +16,7 @@ public class ReviewDTO {
     private String image;
     private String likes;
     private Long productId;
-
+//
     public static ReviewDTO entityToDto(ReviewEntity reviewEntity) {
         return new ReviewDTO(
                 reviewEntity.getId(),
