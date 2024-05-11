@@ -20,10 +20,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users", "/users/login", "/products", "/reviews", "/products/basket/{userId}/{productId}").permitAll()
-                        .anyRequest().authenticated()
-                )
+                .authorizeRequests()
+                .anyRequest().permitAll() // 모든 요청 허용
+                .and()
                 .csrf(csrf -> csrf.disable());
 
         return http.build();

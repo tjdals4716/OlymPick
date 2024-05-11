@@ -14,7 +14,7 @@ public class BasketEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int count = 0;
+    private int count = 1;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

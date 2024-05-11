@@ -1,6 +1,7 @@
 package com.example.SoftwareEngineering_Project.Controller;
 
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
+import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
 import com.example.SoftwareEngineering_Project.Service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,20 @@ public class ProductController {
         } else {
             return ResponseEntity.noContent().build();
         }
+    }
+
+    //장바구니에 있는 상품 배송
+    @PostMapping("/delivery/{basketId}")
+    public ResponseEntity<DeliveryDTO> createDelivery(@PathVariable Long basketId, @RequestBody DeliveryDTO deliveryDTO) {
+        DeliveryDTO delivery = productService.createDelivery(basketId, deliveryDTO.getStatus());
+        return ResponseEntity.ok(delivery);
+    }
+
+    //배송 상태 수정
+    @PutMapping("/delivery/{deliveryId}")
+    public ResponseEntity<DeliveryDTO> updateDeliveryStatus(@PathVariable Long deliveryId, @RequestBody DeliveryDTO deliveryDTO) {
+        DeliveryDTO updatedDelivery = productService.updateDeliveryStatus(deliveryId, deliveryDTO.getStatus());
+        return ResponseEntity.ok(updatedDelivery);
     }
 
     //모든 상품 조회

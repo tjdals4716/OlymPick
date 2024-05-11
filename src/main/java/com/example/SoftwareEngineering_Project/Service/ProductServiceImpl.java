@@ -1,11 +1,15 @@
 package com.example.SoftwareEngineering_Project.Service;
 
+import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
+import com.example.SoftwareEngineering_Project.Entity.BasketEntity;
+import com.example.SoftwareEngineering_Project.Entity.DeliveryEntity;
+import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
+import com.example.SoftwareEngineering_Project.Repository.BasketRepository;
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
-import com.example.SoftwareEngineering_Project.Entity.BasketEntity;
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
 import com.example.SoftwareEngineering_Project.Entity.UserEntity;
-import com.example.SoftwareEngineering_Project.Repository.BasketRepository;
+import com.example.SoftwareEngineering_Project.Repository.DeliveryRepository;
 import com.example.SoftwareEngineering_Project.Repository.ProductRepository;
 import com.example.SoftwareEngineering_Project.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final BasketRepository basketRepository;
+    private final DeliveryRepository deliveryRepository;
 
     //상품 등록
     @Override
@@ -51,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
         if (existingBasketItem != null) {
             existingBasketItem.setCount(existingBasketItem.getCount() + 1);
             BasketEntity savedBasket = basketRepository.save(existingBasketItem);
-            logger.info("장바구니에 상품 개수 증가 완료! " + savedBasket);
+            logger.info("장바구니에 상품의 개수가 증가하였습니다 " + savedBasket);
             return BasketDTO.entityToDto(savedBasket);
         } else {
             BasketDTO basketDTO = new BasketDTO();
@@ -72,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
             if (existingBasketItem.getCount() > 1) {
                 existingBasketItem.setCount(existingBasketItem.getCount() - 1);
                 BasketEntity savedBasket = basketRepository.save(existingBasketItem);
-                logger.info("장바구니에 상품 개수 감소 완료! " + savedBasket);
+                logger.info("장바구니에 상품의 개수가 감소하였습니다 " + savedBasket);
                 return BasketDTO.entityToDto(savedBasket);
             } else {
                 basketRepository.delete(existingBasketItem);
@@ -82,6 +88,39 @@ public class ProductServiceImpl implements ProductService {
         } else {
             throw new RuntimeException("장바구니에 해당 상품이 없습니다. userId: " + userId + ", productId: " + productId);
         }
+    }
+
+    //장바구니에 있는 상품 배송
+    @Override
+    public DeliveryDTO createDelivery(Long basketId, DeliveryStatus status) {
+        BasketEntity basket = basketRepository.findById(basketId)
+                .orElseThrow(() -> new RuntimeException("장바구니를 찾을 수 없습니다. basketId: " + basketId));
+
+        DeliveryDTO deliveryDTO = new DeliveryDTO();
+        deliveryDTO.setBasketId(basketId);
+        deliveryDTO.setStatus(status);
+        deliveryDTO.setStatusDateTime(LocalDateTime.now());
+
+        DeliveryEntity deliveryEntity = deliveryDTO.dtoToEntity(basket, status);
+        DeliveryEntity savedDelivery = deliveryRepository.save(deliveryEntity);
+
+        logger.info("장바구니 상품 배송이 시작되었습니다");
+        return DeliveryDTO.entityToDto(savedDelivery);
+    }
+
+    //배송 상태 수정
+    @Override
+    public DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status) {
+        DeliveryEntity deliveryEntity = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new RuntimeException("배송을 찾을 수 없습니다. deliveryId: " + deliveryId));
+
+        deliveryEntity.setStatus(status);
+        deliveryEntity.setStatusDateTime(LocalDateTime.now());
+
+        DeliveryEntity updatedDelivery = deliveryRepository.save(deliveryEntity);
+
+        logger.info("배송사항이 변경되었습니다");
+        return DeliveryDTO.entityToDto(updatedDelivery);
     }
 
     //모든 상품 조회

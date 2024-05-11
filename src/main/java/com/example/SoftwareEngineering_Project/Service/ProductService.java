@@ -1,8 +1,10 @@
 package com.example.SoftwareEngineering_Project.Service;
 
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
+import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
+import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 
 import java.util.List;
 
@@ -16,4 +18,6 @@ public interface ProductService {
     List<ProductDTO> searchProductsByName(String name);
     BasketDTO addToBasket(Long userId, Long productId);
     BasketDTO removeFromBasket(Long userId, Long productId);
+    DeliveryDTO createDelivery(Long basketId, DeliveryStatus status);
+    DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status);
 }
