@@ -16,7 +16,7 @@ public class ReviewDTO {
     private Long id;
     private String title;
     private String content;
-    private String image;
+    private String mediaUrl;
     private int likes = 0;
     private LocalDateTime statusDateTime;
     private Long userId;
@@ -27,7 +27,7 @@ public class ReviewDTO {
                 reviewEntity.getId(),
                 reviewEntity.getTitle(),
                 reviewEntity.getContent(),
-                reviewEntity.getImage(),
+                reviewEntity.getMediaUrl(),
                 reviewEntity.getLikes(),
                 reviewEntity.getStatusDateTime(),
                 reviewEntity.getUser().getId(),
@@ -36,7 +36,7 @@ public class ReviewDTO {
     }
 
     public ReviewEntity dtoToEntity(UserEntity user, ProductEntity product){
-        return new ReviewEntity(id, title, content, image, likes, statusDateTime, user, product);
+        return new ReviewEntity(id, title, content, mediaUrl, likes, statusDateTime, user, product);
     }
 }
 

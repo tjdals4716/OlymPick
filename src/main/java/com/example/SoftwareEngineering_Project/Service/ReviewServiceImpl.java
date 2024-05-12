@@ -113,7 +113,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewEntity.setTitle(reviewDTO.getTitle());
         reviewEntity.setContent(reviewDTO.getContent());
-        reviewEntity.setImage(reviewDTO.getImage());
+        reviewEntity.setMediaUrl(reviewDTO.getMediaUrl());
         reviewEntity.setLikes(reviewDTO.getLikes());
         reviewEntity.setProduct(product);
 
