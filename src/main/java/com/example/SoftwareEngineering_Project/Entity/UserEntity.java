@@ -23,6 +23,7 @@ public class UserEntity {
     private String age;
     private String mbti;
 
+    //동일 유저 중복 방지를 위해 추가한 코드
     @ManyToMany
     @JoinTable(name = "user_liked_reviews",
             joinColumns = @JoinColumn(name = "user_id"),

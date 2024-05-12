@@ -32,6 +32,7 @@ public class ReviewEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
+    //동일 유저 중복 방지를 위해 추가한 코드, "private int likes = 0;"를 작성 함에도 동일한 유저인지 확인을 위해 작성해야함
     @ManyToMany(mappedBy = "likedReviews")
     @JsonIgnore
     private Set<UserEntity> likedUsers = new HashSet<>();
