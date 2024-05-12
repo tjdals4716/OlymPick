@@ -29,6 +29,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "review_id"))
     private Set<ReviewEntity> likedReviews = new HashSet<>();
 
+    //동일 유저가 중복해서 무언가를 하지 못하게 할때 엔티티에 생성자를 작성하여 파라미터를 일치시킴 (이렇게 하면 DTO 오류 해결)
     public UserEntity(Long id, String uid, String password, String nickname,
                       String gender, String age, String mbti) {
         this.id = id;
