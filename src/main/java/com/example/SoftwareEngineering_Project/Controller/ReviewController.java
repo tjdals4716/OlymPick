@@ -23,6 +23,13 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 
+    //리뷰 좋아요, 한 유저당 좋아요 중복 방지
+    @PostMapping("/likes/{userId}/{reviewId}")
+    public ResponseEntity<ReviewDTO> toggleReviewLike(@PathVariable Long reviewId, @PathVariable Long userId) {
+        ReviewDTO updatedReview = reviewService.toggleReviewLike(reviewId, userId);
+        return ResponseEntity.ok(updatedReview);
+    }
+
     //리뷰 조회
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {

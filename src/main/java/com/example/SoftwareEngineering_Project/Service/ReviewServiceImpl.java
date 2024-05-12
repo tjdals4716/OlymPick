@@ -40,6 +40,30 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewDTO.entityToDto(savedReview);
     }
 
+    //리뷰 좋아요, 한 유저당 좋아요 중복 방지
+    @Override
+    public ReviewDTO toggleReviewLike(Long reviewId, Long userId) {
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. reviewId: " + reviewId));
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다. userId: " + userId));
+
+        if (reviewEntity.getLikedUsers().contains(userEntity)) {
+            reviewEntity.getLikedUsers().remove(userEntity);
+            userEntity.getLikedReviews().remove(reviewEntity);
+            reviewEntity.setLikes(Math.max(reviewEntity.getLikes() - 1, 0));
+        } else {
+            reviewEntity.getLikedUsers().add(userEntity);
+            userEntity.getLikedReviews().add(reviewEntity);
+            reviewEntity.setLikes(reviewEntity.getLikes() + 1);
+        }
+
+        ReviewEntity savedReview = reviewRepository.save(reviewEntity);
+        userRepository.save(userEntity);
+
+        return ReviewDTO.entityToDto(savedReview);
+    }
+
     //리뷰 조회
     @Override
     public ReviewDTO getReviewById(Long id) {

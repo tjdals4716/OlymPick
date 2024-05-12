@@ -17,7 +17,7 @@ public class ReviewDTO {
     private String title;
     private String content;
     private String image;
-    private int likes;
+    private int likes = 0;
     private LocalDateTime statusDateTime;
     private Long userId;
     private Long productId;
