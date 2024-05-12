@@ -40,7 +40,7 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewDTO.entityToDto(savedReview);
     }
 
-    //리뷰 좋아요, 한 유저당 좋아요 중복 방지
+    //리뷰 좋아요, 동일 유저 좋아요 중복 방지
     @Override
     public ReviewDTO toggleReviewLike(Long reviewId, Long userId) {
         ReviewEntity reviewEntity = reviewRepository.findById(reviewId)
