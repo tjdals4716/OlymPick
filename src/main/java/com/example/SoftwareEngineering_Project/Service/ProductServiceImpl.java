@@ -3,6 +3,7 @@ package com.example.SoftwareEngineering_Project.Service;
 import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.Entity.BasketEntity;
 import com.example.SoftwareEngineering_Project.Entity.DeliveryEntity;
+import com.example.SoftwareEngineering_Project.Enum.Category;
 import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import com.example.SoftwareEngineering_Project.Repository.BasketRepository;
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
@@ -37,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         UserEntity userEntity = userRepository.findById(productDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + productDTO.getUserId()));
 
-        ProductEntity productEntity = productDTO.dtoToEntity(userEntity);
+        ProductEntity productEntity = productDTO.dtoToEntity(userEntity, productDTO.getCategory());
         ProductEntity savedProduct = productRepository.save(productEntity);
         logger.info("상품 등록 완료! " + savedProduct);
         return ProductDTO.entityToDto(savedProduct);

@@ -1,7 +1,5 @@
 package com.example.SoftwareEngineering_Project.Enum;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public enum DeliveryStatus {
     픽업,
     상품접수,

@@ -3,6 +3,7 @@ package com.example.SoftwareEngineering_Project.Controller;
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
 import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
+import com.example.SoftwareEngineering_Project.Enum.Category;
 import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import com.example.SoftwareEngineering_Project.Service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    //상품 등록
+    //상품 등록, 컨트롤러 메서드에서 @RequestBody 어노테이션을 사용할 때는 하나의 객체만 매핑할 수 있음
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         ProductDTO createdProduct = productService.createProduct(productDTO);

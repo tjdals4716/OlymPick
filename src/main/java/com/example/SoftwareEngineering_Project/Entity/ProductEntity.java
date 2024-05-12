@@ -1,5 +1,7 @@
 package com.example.SoftwareEngineering_Project.Entity;
 
+import com.example.SoftwareEngineering_Project.Enum.Category;
+import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +19,9 @@ public class ProductEntity {
     private String content;
     private String price;
     private String image;
-    private String category;
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -4,6 +4,7 @@ import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
 import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
+import com.example.SoftwareEngineering_Project.Enum.Category;
 import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 
 import java.util.List;
