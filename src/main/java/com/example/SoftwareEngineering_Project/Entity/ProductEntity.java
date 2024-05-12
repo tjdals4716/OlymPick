@@ -18,7 +18,7 @@ public class ProductEntity {
     private String name;
     private String content;
     private String price;
-    private String image;
+    private String mediaUrl;
 
     @Enumerated(EnumType.STRING)
     private Category category;
