@@ -1,11 +1,12 @@
 package com.example.SoftwareEngineering_Project.Service;
 
 import com.example.SoftwareEngineering_Project.DTO.ReviewDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ReviewService {
-    ReviewDTO createReview(ReviewDTO reviewDTO);
+    ReviewDTO createReview(ReviewDTO reviewDTO, MultipartFile mediaFile);
     ReviewDTO getReviewById(Long id);
     List<ReviewDTO> getAllReviews();
     List<ReviewDTO> getReviewsByProductId(Long productId);

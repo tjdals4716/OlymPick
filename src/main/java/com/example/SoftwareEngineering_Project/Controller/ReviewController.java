@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,8 +19,9 @@ public class ReviewController {
 
     //리뷰 작성
     @PostMapping
-    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) {
-        ReviewDTO createdReview = reviewService.createReview(reviewDTO);
+    public ResponseEntity<ReviewDTO> createReview(@RequestPart("reviewData") ReviewDTO reviewDTO,
+                                                  @RequestPart(value = "mediaFile", required = false) MultipartFile mediaFile) {
+        ReviewDTO createdReview = reviewService.createReview(reviewDTO, mediaFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 

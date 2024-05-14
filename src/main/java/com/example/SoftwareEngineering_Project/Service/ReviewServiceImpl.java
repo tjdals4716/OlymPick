@@ -7,13 +7,19 @@ import com.example.SoftwareEngineering_Project.Entity.UserEntity;
 import com.example.SoftwareEngineering_Project.Repository.ProductRepository;
 import com.example.SoftwareEngineering_Project.Repository.ReviewRepository;
 import com.example.SoftwareEngineering_Project.Repository.UserRepository;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,16 +30,66 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final Storage storage;
 
     //리뷰 작성
     @Override
-    public ReviewDTO createReview(ReviewDTO reviewDTO) {
+    public ReviewDTO createReview(ReviewDTO reviewDTO, MultipartFile mediaFile) {
         UserEntity user = userRepository.findById(reviewDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. id: " + reviewDTO.getUserId()));
         ProductEntity product = productRepository.findById(reviewDTO.getProductId())
                 .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다. id: " + reviewDTO.getProductId()));
 
+        String mediaUrl = null;
+        if (mediaFile != null && !mediaFile.isEmpty()) {
+            try {
+                UUID uuid = UUID.randomUUID();
+                String fileExtension = mediaFile.getOriginalFilename().substring(mediaFile.getOriginalFilename().lastIndexOf("."));
+                String fileName = uuid.toString() + fileExtension;
+                String contentType;
+                switch (fileExtension.toLowerCase()) {
+                    case ".jpg":
+                    case ".jpeg":
+                        contentType = "image/jpeg";
+                        break;
+                    case ".png":
+                        contentType = "image/png";
+                        break;
+                    case ".bmp":
+                        contentType = "image/bmp";
+                        break;
+                    case ".gif":
+                        contentType = "image/gif";
+                        break;
+                    case ".mp4":
+                        contentType = "video/mp4";
+                        break;
+                    case ".avi":
+                        contentType = "video/avi";
+                        break;
+                    case ".wmv":
+                        contentType = "video/wmv";
+                        break;
+                    case ".mpeg:":
+                        contentType = "video/mpeg";
+                        break;
+                    default:
+                        contentType = "application/octet-stream";
+                }
+                BlobId blobId = BlobId.of("olympick", fileName);
+                BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                        .setContentType(contentType)
+                        .setContentDisposition("inline; filename=" + mediaFile.getOriginalFilename())
+                        .build();
+                storage.create(blobInfo, mediaFile.getBytes());
+                mediaUrl = "https://storage.googleapis.com/olympick/" + fileName;
+            } catch (IOException e) {
+                throw new RuntimeException("미디어 파일 업로드 중 오류가 발생했습니다.", e);
+            }
+        }
+
         ReviewEntity reviewEntity = reviewDTO.dtoToEntity(user, product);
+        reviewEntity.setMediaUrl(mediaUrl);
         reviewEntity.setStatusDateTime(LocalDateTime.now());
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
         logger.info("리뷰 작성 완료! " + savedReview);
