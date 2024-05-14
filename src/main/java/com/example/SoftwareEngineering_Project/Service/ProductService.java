@@ -6,11 +6,12 @@ import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
 import com.example.SoftwareEngineering_Project.Enum.Category;
 import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ProductService {
-    ProductDTO createProduct(ProductDTO productDTO);
+    ProductDTO createProduct(ProductDTO productDTO, MultipartFile mediaFile);
     List<ProductDTO> getAllProducts();
     ProductDTO getProductById(Long id);
     ProductDTO updateProduct(Long id, ProductDTO productDTO);

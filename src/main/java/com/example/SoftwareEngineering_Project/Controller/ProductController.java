@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,9 @@ public class ProductController {
 
     //상품 등록, 컨트롤러 메서드에서 @RequestBody 어노테이션을 사용할 때는 하나의 객체만 매핑할 수 있음
     @PostMapping
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
-        ProductDTO createdProduct = productService.createProduct(productDTO);
+    public ResponseEntity<ProductDTO> createProduct(@RequestPart("productData") ProductDTO productDTO,
+                                                    @RequestPart(value = "mediaFile", required = false) MultipartFile mediaFile) {
+        ProductDTO createdProduct = productService.createProduct(productDTO, mediaFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
