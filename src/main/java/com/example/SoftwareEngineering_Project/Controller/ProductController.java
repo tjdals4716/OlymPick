@@ -27,7 +27,7 @@ public class ProductController {
         ProductDTO createdProduct = productService.createProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
-//수정 테스트
+
     //상품 장바구니에 담기, 동일한 상품일 경우 개수만 증가
     @PostMapping("/basket/{userId}/{productId}")
     public ResponseEntity<BasketDTO> addToBasket(@PathVariable Long productId, @PathVariable Long userId) {
