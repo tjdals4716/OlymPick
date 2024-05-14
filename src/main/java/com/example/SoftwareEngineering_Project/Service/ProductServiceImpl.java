@@ -48,6 +48,7 @@ public class ProductServiceImpl implements ProductService {
         String mediaUrl = null;
         if (mediaFile != null && !mediaFile.isEmpty()) {
             try {
+                //UUID를 사용함으로써 버킷에 저장되는 미디어 파일들이 파일 이름 중복으로 충돌이 일어나지 않음
                 UUID uuid = UUID.randomUUID();
                 String fileExtension = mediaFile.getOriginalFilename().substring(mediaFile.getOriginalFilename().lastIndexOf("."));
                 String fileName = uuid.toString() + fileExtension;
