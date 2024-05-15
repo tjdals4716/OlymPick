@@ -1,5 +1,8 @@
 package com.example.SoftwareEngineering_Project.Config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.SoftwareEngineering_Project.DTO.ProductMessageDTO;
 import com.example.SoftwareEngineering_Project.Entity.UserEntity;
 import com.example.SoftwareEngineering_Project.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import java.util.HashMap;
 public class WebSocketMessageHandler extends TextWebSocketHandler {
     private final HashMap<String, WebSocketSession> sessionMap = new HashMap<>();
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public WebSocketMessageHandler(UserRepository userRepository) {
@@ -24,10 +28,33 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
     }
 
     @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        String payload = message.getPayload();
+        ProductMessageDTO productMessageDTO;
+        try {
+            productMessageDTO = objectMapper.readValue(payload, ProductMessageDTO.class);
+        } catch (JsonProcessingException e) {
+            return;
+        }
+        Long senderId = productMessageDTO.getSender();
+        Long receiverId = productMessageDTO.getReceiver();
+        WebSocketSession senderSession = sessionMap.get(userRepository.findById(senderId).get().getNickname());
+        WebSocketSession receiverSession = sessionMap.get(userRepository.findById(receiverId).get().getNickname());
+        if (senderSession != null && senderSession.isOpen()) {
+            String jsonString = objectMapper.writeValueAsString(productMessageDTO);
+            senderSession.sendMessage(new TextMessage(jsonString));
+        }
+        if (receiverSession != null && receiverSession.isOpen()) {
+            String jsonString = objectMapper.writeValueAsString(productMessageDTO);
+            receiverSession.sendMessage(new TextMessage(jsonString));
+        }
+    }
+
+    @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         String username = searchUserName(session);
         sessionMap.put(username, session);
-        session.sendMessage(new TextMessage(username + "님이 문의 채팅에 참여하였습니다."));
+        session.sendMessage(new TextMessage(username + "님이 상품 문의 채팅에 참여하였습니다."));
     }
 
     @Override
