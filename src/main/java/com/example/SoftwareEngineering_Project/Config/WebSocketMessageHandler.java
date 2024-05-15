@@ -35,7 +35,7 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
             productMessageDTO = objectMapper.readValue(payload, ProductMessageDTO.class);
         } catch (JsonProcessingException e) {
             return;
-        }//테스트
+        }
         Long senderId = productMessageDTO.getSender();
         Long receiverId = productMessageDTO.getReceiver();
         WebSocketSession senderSession = sessionMap.get(userRepository.findById(senderId).get().getNickname());
