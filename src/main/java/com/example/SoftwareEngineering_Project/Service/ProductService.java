@@ -16,7 +16,7 @@ public interface ProductService {
     void deleteProduct(Long id);
     List<ProductDTO> getProductsByCategory(String category);
     List<ProductDTO> searchProductsByName(String name);
-    BasketDTO addToBasket(Long userId, Long productId);
+    BasketDTO addToBasket(Long userId, Long productId, Long quantity);
     BasketDTO removeFromBasket(Long userId, Long productId);
     List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status);
     DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status);

@@ -1,5 +1,6 @@
 package com.example.SoftwareEngineering_Project.Entity;
 
+import com.example.SoftwareEngineering_Project.Enum.BasketStatus;
 import com.example.SoftwareEngineering_Project.Enum.Category;
 import jakarta.persistence.*;
 import lombok.*;

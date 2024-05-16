@@ -2,6 +2,7 @@ package com.example.SoftwareEngineering_Project.DTO;
 
 import com.example.SoftwareEngineering_Project.Entity.ProductEntity;
 import com.example.SoftwareEngineering_Project.Entity.UserEntity;
+import com.example.SoftwareEngineering_Project.Enum.BasketStatus;
 import com.example.SoftwareEngineering_Project.Enum.Category;
 import lombok.*;
 
@@ -15,7 +16,7 @@ public class ProductDTO {
     private String name;
     private String content;
     private String price;
-    private Long  quantity;
+    private Long quantity;
     private String mediaUrl;
     private Category category;
     private Long userId;

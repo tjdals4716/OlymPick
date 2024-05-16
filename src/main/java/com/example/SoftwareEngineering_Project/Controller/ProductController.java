@@ -32,9 +32,10 @@ public class ProductController {
 
     //상품 장바구니에 담기, 동일한 상품일 경우 개수만 증가
     @PostMapping("/basket/{userId}/{productId}")
-    public ResponseEntity<BasketDTO> addToBasket(@PathVariable Long productId, @PathVariable Long userId) {
-        BasketDTO basketDTO = productService.addToBasket(userId, productId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(basketDTO);
+    public ResponseEntity<BasketDTO> addToBasket(@PathVariable Long productId, @PathVariable Long userId, @RequestBody Map<String, Long> requestBody) {
+            Long quantity = requestBody.getOrDefault("quantity", 1L); // 기본값 1
+            BasketDTO basketDTO = productService.addToBasket(userId, productId, quantity);
+            return ResponseEntity.status(HttpStatus.CREATED).body(basketDTO);
     }
 
     //상품 장바구니에서 빼기, 동일한 상품일 경우 개수만 감소, 1에서 뺄 경우 장바구니에서 상품 삭제

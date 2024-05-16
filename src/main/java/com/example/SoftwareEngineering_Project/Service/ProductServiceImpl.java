@@ -12,7 +12,6 @@ import com.example.SoftwareEngineering_Project.Entity.UserEntity;
 import com.example.SoftwareEngineering_Project.Repository.DeliveryRepository;
 import com.example.SoftwareEngineering_Project.Repository.ProductRepository;
 import com.example.SoftwareEngineering_Project.Repository.UserRepository;
-import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -24,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -102,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
 
     //상품 장바구니에 담기, 동일한 상품일 경우 개수만 증가
     @Override
-    public BasketDTO addToBasket(Long userId, Long productId) {
+    public BasketDTO addToBasket(Long userId, Long productId, Long quantity) {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + userId));
 
@@ -112,15 +111,18 @@ public class ProductServiceImpl implements ProductService {
         BasketEntity existingBasketItem = basketRepository.findByUser_IdAndProduct_Id(userId, productId);
 
         if (existingBasketItem != null) {
-            existingBasketItem.setCount(existingBasketItem.getCount() + 1);
+            Long newQuantity = existingBasketItem.getCount() + quantity;
+            existingBasketItem.setCount(newQuantity);
             BasketEntity savedBasket = basketRepository.save(existingBasketItem);
+
             logger.info("장바구니에 상품의 개수가 증가하였습니다 " + savedBasket);
             return BasketDTO.entityToDto(savedBasket);
         } else {
             BasketDTO basketDTO = new BasketDTO();
-            basketDTO.setCount(1);
+            basketDTO.setCount(quantity);
             BasketEntity basketEntity = basketDTO.dtoToEntity(userEntity, productEntity);
             BasketEntity savedBasket = basketRepository.save(basketEntity);
+
             logger.info("장바구니에 상품 추가 완료! " + savedBasket);
             return BasketDTO.entityToDto(savedBasket);
         }
@@ -132,9 +134,11 @@ public class ProductServiceImpl implements ProductService {
         BasketEntity existingBasketItem = basketRepository.findByUser_IdAndProduct_Id(userId, productId);
 
         if (existingBasketItem != null) {
-            if (existingBasketItem.getCount() > 1) {
-                existingBasketItem.setCount(existingBasketItem.getCount() - 1);
+            if (existingBasketItem.getCount() > 1L) {
+                Long newQuantity = existingBasketItem.getCount() - 1L;
+                existingBasketItem.setCount(newQuantity);
                 BasketEntity savedBasket = basketRepository.save(existingBasketItem);
+
                 logger.info("장바구니에 상품의 개수가 감소하였습니다 " + savedBasket);
                 return BasketDTO.entityToDto(savedBasket);
             } else {
@@ -155,17 +159,34 @@ public class ProductServiceImpl implements ProductService {
 
         List<BasketEntity> baskets = basketRepository.findByUser_Id(userId);
 
-        List<DeliveryEntity> deliveryEntities = baskets.stream()
-                .map(basket -> {
-                    DeliveryDTO deliveryDTO = new DeliveryDTO();
-                    deliveryDTO.setUserId(userId);
-                    deliveryDTO.setBasketId(basket.getId());
-                    deliveryDTO.setStatus(status);
-                    deliveryDTO.setStatusDateTime(LocalDateTime.now());
+        List<DeliveryEntity> deliveryEntities = new ArrayList<>();
 
-                    return deliveryDTO.dtoToEntity(user, basket, status);
-                })
-                .collect(Collectors.toList());
+        for (BasketEntity basket : baskets) {
+            ProductEntity product = basket.getProduct();
+            Long basketQuantity = basket.getCount();
+
+            // 재고 수량 확인
+            if (product.getQuantity() < basketQuantity) {
+                logger.warn("상품 재고가 부족하여 배송이 불가능합니다. 상품 ID: {}, 재고 수량: {}, 주문 수량: {}",
+                        product.getId(), product.getQuantity(), basketQuantity);
+                continue;
+            }
+
+            DeliveryDTO deliveryDTO = new DeliveryDTO();
+            deliveryDTO.setUserId(userId);
+            deliveryDTO.setBasketId(basket.getId());
+            deliveryDTO.setStatus(status);
+            deliveryDTO.setStatusDateTime(LocalDateTime.now());
+            deliveryDTO.setCount(basketQuantity);
+
+            DeliveryEntity deliveryEntity = deliveryDTO.dtoToEntity(user, basket, status);
+            deliveryEntities.add(deliveryEntity);
+
+            // 상품 재고 수량 감소
+            Long remainingQuantity = product.getQuantity() - basketQuantity;
+            product.setQuantity(remainingQuantity);
+            productRepository.save(product);
+        }
 
         List<DeliveryEntity> savedDeliveries = deliveryRepository.saveAll(deliveryEntities);
 
@@ -215,7 +236,9 @@ public class ProductServiceImpl implements ProductService {
 
         ProductEntity existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다. id: " + id));
+
         Long newQuantity = productDTO.getQuantity();
+
         existingProduct.setName(productDTO.getName());
         existingProduct.setContent(productDTO.getContent());
         existingProduct.setQuantity(newQuantity);
