@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class DeliveryDTO {
     private Long id;
+    private Long count;
     private Long userId;
     private Long basketId;
     private DeliveryStatus status;
@@ -23,6 +24,7 @@ public class DeliveryDTO {
     public static DeliveryDTO entityToDto(DeliveryEntity deliveryEntity) {
         return new DeliveryDTO(
                 deliveryEntity.getId(),
+                deliveryEntity.getCount(),
                 deliveryEntity.getUser().getId(),
                 deliveryEntity.getBasket().getId(),
                 deliveryEntity.getStatus(),
@@ -31,6 +33,6 @@ public class DeliveryDTO {
     }
 
     public DeliveryEntity dtoToEntity(UserEntity user, BasketEntity basket, DeliveryStatus status){
-        return new DeliveryEntity(id, user, basket, status, statusDateTime);
+        return new DeliveryEntity(id, count, user, basket, status, statusDateTime);
     }
 }
