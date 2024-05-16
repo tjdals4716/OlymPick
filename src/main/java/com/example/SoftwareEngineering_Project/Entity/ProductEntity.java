@@ -1,7 +1,6 @@
 package com.example.SoftwareEngineering_Project.Entity;
 
 import com.example.SoftwareEngineering_Project.Enum.Category;
-import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +17,7 @@ public class ProductEntity {
     private String name;
     private String content;
     private String price;
+    private Long quantity;
     private String mediaUrl;
 
     @Enumerated(EnumType.STRING)

@@ -215,10 +215,11 @@ public class ProductServiceImpl implements ProductService {
 
         ProductEntity existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다. id: " + id));
-
+        Long newQuantity = productDTO.getQuantity();
         existingProduct.setName(productDTO.getName());
         existingProduct.setContent(productDTO.getContent());
-        existingProduct.setPrice(productDTO.getPrice());
+        existingProduct.setQuantity(newQuantity);
+        existingProduct.setQuantity(productDTO.getQuantity());
         existingProduct.setMediaUrl(productDTO.getMediaUrl());
         existingProduct.setCategory(productDTO.getCategory());
         existingProduct.setUser(userEntity);

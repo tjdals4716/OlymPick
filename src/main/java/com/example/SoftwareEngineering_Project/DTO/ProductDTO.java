@@ -15,6 +15,7 @@ public class ProductDTO {
     private String name;
     private String content;
     private String price;
+    private Long  quantity;
     private String mediaUrl;
     private Category category;
     private Long userId;
@@ -25,6 +26,7 @@ public class ProductDTO {
                 productEntity.getName(),
                 productEntity.getContent(),
                 productEntity.getPrice(),
+                productEntity.getQuantity(),
                 productEntity.getMediaUrl(),
                 productEntity.getCategory(),
                 productEntity.getUser().getId()
@@ -32,7 +34,7 @@ public class ProductDTO {
     }
 
     public ProductEntity dtoToEntity(UserEntity user, Category category){
-        return new ProductEntity(id, name, content, price, mediaUrl, category, user);
+        return new ProductEntity(id, name, content, price, quantity, mediaUrl, category, user);
     }
 
 }
