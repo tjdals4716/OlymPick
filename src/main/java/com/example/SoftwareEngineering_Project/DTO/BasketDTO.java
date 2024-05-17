@@ -17,6 +17,8 @@ public class BasketDTO {
     private BasketStatus basketStatus;
     private Long userId;
     private Long productId;
+    private UserDTO user;
+    private ProductDTO product;
 
     public static BasketDTO entityToDto(BasketEntity basketEntity) {
         return new BasketDTO(
@@ -24,7 +26,9 @@ public class BasketDTO {
                 basketEntity.getCount(),
                 basketEntity.getBasketStatus(),
                 basketEntity.getUser().getId(),
-                basketEntity.getProduct().getId()
+                basketEntity.getProduct().getId(),
+                UserDTO.entityToDto(basketEntity.getUser()),
+                ProductDTO.entityToDto(basketEntity.getProduct())
         );
     }
 
