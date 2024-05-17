@@ -143,7 +143,7 @@ public class ProductServiceImpl implements ProductService {
                 existingBasketItem.setCount(newQuantity);
 
                 // BasketStatus 업데이트
-                if (existingBasketItem.getBasketStatus() == BasketStatus.배송중) {
+                if (existingBasketItem.getBasketStatus() == BasketStatus.구매완료) {
                     existingBasketItem.setBasketStatus(BasketStatus.배송준비중);
                 }
 
@@ -153,7 +153,7 @@ public class ProductServiceImpl implements ProductService {
                 return BasketDTO.entityToDto(savedBasket);
             } else {
                 // BasketStatus 업데이트
-                if (existingBasketItem.getBasketStatus() == BasketStatus.배송중) {
+                if (existingBasketItem.getBasketStatus() == BasketStatus.구매완료) {
                     existingBasketItem.setBasketStatus(BasketStatus.배송준비중);
                     basketRepository.save(existingBasketItem);
                 }
@@ -205,7 +205,7 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(product);
 
             // BasketStatus 업데이트
-            basket.setBasketStatus(BasketStatus.배송중);
+            basket.setBasketStatus(BasketStatus.구매완료);
             basketRepository.save(basket);
         }
 
