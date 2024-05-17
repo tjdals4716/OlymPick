@@ -3,6 +3,7 @@ package com.example.SoftwareEngineering_Project.Service;
 import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.Entity.BasketEntity;
 import com.example.SoftwareEngineering_Project.Entity.DeliveryEntity;
+import com.example.SoftwareEngineering_Project.Enum.BasketStatus;
 import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import com.example.SoftwareEngineering_Project.Repository.BasketRepository;
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
@@ -120,7 +121,10 @@ public class ProductServiceImpl implements ProductService {
         } else {
             BasketDTO basketDTO = new BasketDTO();
             basketDTO.setCount(quantity);
-            BasketEntity basketEntity = basketDTO.dtoToEntity(userEntity, productEntity);
+            basketDTO.setUserId(userId);
+            basketDTO.setProductId(productId);
+            basketDTO.setBasketStatus(BasketStatus.배송준비중); // BasketStatus 설정
+            BasketEntity basketEntity = basketDTO.dtoToEntity(userEntity, BasketStatus.배송준비중, productEntity);
             BasketEntity savedBasket = basketRepository.save(basketEntity);
 
             logger.info("장바구니에 상품 추가 완료! " + savedBasket);
@@ -137,11 +141,23 @@ public class ProductServiceImpl implements ProductService {
             if (existingBasketItem.getCount() > 1L) {
                 Long newQuantity = existingBasketItem.getCount() - 1L;
                 existingBasketItem.setCount(newQuantity);
+
+                // BasketStatus 업데이트
+                if (existingBasketItem.getBasketStatus() == BasketStatus.배송중) {
+                    existingBasketItem.setBasketStatus(BasketStatus.배송준비중);
+                }
+
                 BasketEntity savedBasket = basketRepository.save(existingBasketItem);
 
                 logger.info("장바구니에 상품의 개수가 감소하였습니다 " + savedBasket);
                 return BasketDTO.entityToDto(savedBasket);
             } else {
+                // BasketStatus 업데이트
+                if (existingBasketItem.getBasketStatus() == BasketStatus.배송중) {
+                    existingBasketItem.setBasketStatus(BasketStatus.배송준비중);
+                    basketRepository.save(existingBasketItem);
+                }
+
                 basketRepository.delete(existingBasketItem);
                 logger.info("장바구니에서 상품 삭제 완료! " + existingBasketItem);
                 return null;
@@ -186,6 +202,10 @@ public class ProductServiceImpl implements ProductService {
             Long remainingQuantity = product.getQuantity() - basketQuantity;
             product.setQuantity(remainingQuantity);
             productRepository.save(product);
+
+            // BasketStatus 업데이트
+            basket.setBasketStatus(BasketStatus.배송중);
+            basketRepository.save(basket);
         }
 
         List<DeliveryEntity> savedDeliveries = deliveryRepository.saveAll(deliveryEntities);
@@ -202,10 +222,17 @@ public class ProductServiceImpl implements ProductService {
         DeliveryEntity deliveryEntity = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new RuntimeException("배송을 찾을 수 없습니다. deliveryId: " + deliveryId));
 
+        BasketEntity basketEntity = deliveryEntity.getBasket();
+
         deliveryEntity.setStatus(status);
         deliveryEntity.setStatusDateTime(LocalDateTime.now());
 
+        if (status == DeliveryStatus.배송완료) {
+            basketEntity.setBasketStatus(BasketStatus.배송완료); // BasketStatus 업데이트
+        }
+
         DeliveryEntity updatedDelivery = deliveryRepository.save(deliveryEntity);
+        basketRepository.save(basketEntity);
 
         logger.info("상품의 배송상태가 변경되었습니다!");
         return DeliveryDTO.entityToDto(updatedDelivery);
