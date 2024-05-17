@@ -28,7 +28,7 @@ public class BasketDTO {
         );
     }
 
-    public BasketEntity dtoToEntity(UserEntity user, ProductEntity product) {
+    public BasketEntity dtoToEntity(UserEntity user, BasketStatus basketStatus, ProductEntity product) {
         return new BasketEntity(id, count, basketStatus, user, product);
     }
 }
