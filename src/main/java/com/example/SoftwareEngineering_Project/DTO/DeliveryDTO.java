@@ -35,7 +35,6 @@ public class DeliveryDTO {
                 BasketDTO.entityToDto(deliveryEntity.getBasket())
         );
     }
-
     public DeliveryEntity dtoToEntity(UserEntity user, BasketEntity basket, DeliveryStatus status){
         return new DeliveryEntity(id, count, user, basket, status, statusDateTime);
     }
