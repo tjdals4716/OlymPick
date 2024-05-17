@@ -35,7 +35,7 @@ public class UserEntity {
     public UserEntity(Long id, String phoneNumber, String uid, String password, String nickname,
                       String gender, String age, String mbti) {
         this.id = id;
-        this.phoneNumber = phoneNumber; //추가
+        this.phoneNumber = phoneNumber;
         this.uid = uid;
         this.password = password;
         this.nickname = nickname;
