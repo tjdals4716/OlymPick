@@ -19,5 +19,6 @@ public interface ProductService {
     BasketDTO addToBasket(Long userId, Long productId, Long quantity);
     BasketDTO removeFromBasket(Long userId, Long productId);
     List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status);
+    DeliveryDTO createDeliveryForBasketItem(Long userId, Long basketId, DeliveryStatus status);
     DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status);
 }

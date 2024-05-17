@@ -167,7 +167,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    //사용자 장바구니에 있는 상품 배송
+    //사용자 장바구니에 있는 전체 상품을 배송
     @Override
     public List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status) {
         UserEntity user = userRepository.findById(userId)
@@ -219,6 +219,57 @@ public class ProductServiceImpl implements ProductService {
         return savedDeliveries.stream()
                 .map(DeliveryDTO::entityToDto)
                 .collect(Collectors.toList());
+    }
+
+    //사용자 장바구니에 있는 상품을 선택적으로 배송
+    @Override
+    public DeliveryDTO createDeliveryForBasketItem(Long userId, Long basketId, DeliveryStatus status) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + userId));
+
+        BasketEntity basket = basketRepository.findById(basketId)
+                .orElseThrow(() -> new RuntimeException("장바구니를 찾을 수 없습니다. basketId: " + basketId));
+
+        if (basket.getUser().getId() != userId) {
+            throw new RuntimeException("사용자의 장바구니가 아닙니다. userId: " + userId + ", basketId: " + basketId);
+        }
+
+        if (basket.getBasketStatus() != BasketStatus.배송준비중) {
+            throw new RuntimeException("상품을 구매하셔서 배송중이거나 배송완료된 상태입니다");
+        }
+
+        ProductEntity product = basket.getProduct();
+        Long basketQuantity = basket.getCount();
+
+        //주문 수량이 재고량 한계치에 맞는지 확인
+        if (product.getQuantity() < basketQuantity) {
+            throw new RuntimeException(
+                    "\n" + product.getName() + " 상품의 재고가 부족하여 배송이 불가능합니다"
+                            + "\n" + user.getNickname() + "님이 현재 선택하신 상품 남은 재고 수량 : " + product.getQuantity()
+                            + "\n" + user.getNickname() + "님이 현재 선택하신 상품 주문 수량 : " + basketQuantity);
+        }
+
+        DeliveryDTO deliveryDTO = new DeliveryDTO();
+        deliveryDTO.setUserId(userId);
+        deliveryDTO.setBasketId(basketId);
+        deliveryDTO.setStatus(status);
+        deliveryDTO.setStatusDateTime(LocalDateTime.now());
+        deliveryDTO.setCount(basketQuantity);
+
+        DeliveryEntity deliveryEntity = deliveryDTO.dtoToEntity(user, basket, status);
+        DeliveryEntity savedDelivery = deliveryRepository.save(deliveryEntity);
+
+        // 상품 재고 수량 감소
+        Long remainingQuantity = product.getQuantity() - basketQuantity;
+        product.setQuantity(remainingQuantity);
+        productRepository.save(product);
+
+        // BasketStatus 업데이트
+        basket.setBasketStatus(BasketStatus.구매완료);
+        basketRepository.save(basket);
+
+        logger.info("선택한 장바구니 상품의 배송이 시작되었습니다.");
+        return DeliveryDTO.entityToDto(savedDelivery);
     }
 
     //배송 상태 수정

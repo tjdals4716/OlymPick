@@ -49,7 +49,7 @@ public class ProductController {
         }
     }
 
-    //장바구니에 있는 상품 배송
+    //장바구니에 있는 전체 상품 배송
     @PostMapping("/delivery/basket")
     public ResponseEntity<List<DeliveryDTO>> createDeliveryForBasket(@RequestBody Map<String, Object> requestBody) {
         Long userId = ((Number) requestBody.get("userId")).longValue();
@@ -58,6 +58,17 @@ public class ProductController {
 
         List<DeliveryDTO> createdDeliveries = productService.createDeliveryForBasket(userId, status);
         return ResponseEntity.ok(createdDeliveries);
+    }
+
+    //사용자 장바구니에 있는 상품을 선택적으로 배송
+    @PostMapping("/delivery/basket/{basketId}")
+    public ResponseEntity<DeliveryDTO> createDeliveryForBasketItem(@PathVariable Long basketId, @RequestBody Map<String, Object> requestBody) {
+        Long userId = ((Number) requestBody.get("userId")).longValue();
+        String statusString = (String) requestBody.get("status");
+        DeliveryStatus status = DeliveryStatus.valueOf(statusString);
+
+        DeliveryDTO createdDelivery = productService.createDeliveryForBasketItem(userId, basketId, status);
+        return ResponseEntity.ok(createdDelivery);
     }
 
     //배송 상태 수정
