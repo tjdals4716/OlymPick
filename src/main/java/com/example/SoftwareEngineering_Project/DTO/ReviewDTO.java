@@ -21,6 +21,8 @@ public class ReviewDTO {
     private LocalDateTime statusDateTime;
     private Long userId;
     private Long productId;
+    private UserDTO user;
+    private ProductDTO product;
 
     public static ReviewDTO entityToDto(ReviewEntity reviewEntity) {
         return new ReviewDTO(
@@ -31,7 +33,9 @@ public class ReviewDTO {
                 reviewEntity.getLikes(),
                 reviewEntity.getStatusDateTime(),
                 reviewEntity.getUser().getId(),
-                reviewEntity.getProduct().getId()
+                reviewEntity.getProduct().getId(),
+                UserDTO.entityToDto(reviewEntity.getUser()),
+                ProductDTO.entityToDto(reviewEntity.getProduct())
         );
     }
 
