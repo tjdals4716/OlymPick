@@ -20,6 +20,7 @@ public class DeliveryDTO {
     private Long basketId;
     private DeliveryStatus status;
     private LocalDateTime statusDateTime;
+    private UserDTO user;
 
     public static DeliveryDTO entityToDto(DeliveryEntity deliveryEntity) {
         return new DeliveryDTO(
@@ -28,7 +29,8 @@ public class DeliveryDTO {
                 deliveryEntity.getUser().getId(),
                 deliveryEntity.getBasket().getId(),
                 deliveryEntity.getStatus(),
-                deliveryEntity.getStatusDateTime()
+                deliveryEntity.getStatusDateTime(),
+                UserDTO.entityToDto(deliveryEntity.getUser())
         );
     }
 
