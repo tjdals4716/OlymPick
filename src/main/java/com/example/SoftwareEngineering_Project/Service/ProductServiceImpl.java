@@ -178,15 +178,19 @@ public class ProductServiceImpl implements ProductService {
         List<DeliveryEntity> deliveryEntities = new ArrayList<>();
 
         for (BasketEntity basket : baskets) {
+            if (basket.getBasketStatus() != BasketStatus.배송준비중) {
+                throw new RuntimeException("상품을 구매하셔서 배송중이거나 배송완료된 상태입니다");
+            }
+
             ProductEntity product = basket.getProduct();
             Long basketQuantity = basket.getCount();
 
             //주문 수량이 재고량 한계치에 맞는지 확인
             if (product.getQuantity() < basketQuantity) {
                 throw new RuntimeException(
-                          "\n" + product.getName() + " 상품의 재고가 부족하여 배송이 불가능합니다"
-                        + "\n" + user.getNickname() + "님이 현재 선택하신 상품 남은 재고 수량 : " + product.getQuantity()
-                        + "\n" + user.getNickname() + "님이 현재 선택하신 상품 주문 수량 : " + basketQuantity);
+                        "\n" + product.getName() + " 상품의 재고가 부족하여 배송이 불가능합니다"
+                      + "\n" + user.getNickname() + "님이 현재 선택하신 상품 남은 재고 수량 : " + product.getQuantity()
+                      + "\n" + user.getNickname() + "님이 현재 선택하신 상품 주문 수량 : " + basketQuantity);
             }
 
             DeliveryDTO deliveryDTO = new DeliveryDTO();
