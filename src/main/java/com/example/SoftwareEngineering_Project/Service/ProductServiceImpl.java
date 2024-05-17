@@ -229,7 +229,11 @@ public class ProductServiceImpl implements ProductService {
         deliveryEntity.setStatusDateTime(LocalDateTime.now());
 
         if (status == DeliveryStatus.배송완료) {
-            basketEntity.setBasketStatus(BasketStatus.배송완료); // BasketStatus 업데이트
+            basketEntity.setBasketStatus(BasketStatus.배송완료);
+        }
+
+        if(status == DeliveryStatus.배송취소){
+            basketEntity.setBasketStatus(BasketStatus.상품교환);
         }
 
         DeliveryEntity updatedDelivery = deliveryRepository.save(deliveryEntity);
