@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 public class UserDTO {
     private Long id;
+    private String phoneNumber;
     private String uid;
     private String password;
     private String nickname;
@@ -20,6 +21,7 @@ public class UserDTO {
     public static UserDTO entityToDto(UserEntity userEntity) {
         return new UserDTO(
                 userEntity.getId(),
+                userEntity.getPhoneNumber(),
                 userEntity.getUid(),
                 userEntity.getPassword(),
                 userEntity.getNickname(),
@@ -30,6 +32,6 @@ public class UserDTO {
     }
 
     public UserEntity dtoToEntity(){
-        return new UserEntity(id, uid, password, nickname, gender, age, mbti);
+        return new UserEntity(id, phoneNumber, uid, password, nickname, gender, age, mbti);
     }
 }
