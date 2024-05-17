@@ -181,11 +181,12 @@ public class ProductServiceImpl implements ProductService {
             ProductEntity product = basket.getProduct();
             Long basketQuantity = basket.getCount();
 
-            // 재고 수량 확인
+            //주문 수량이 재고량 한계치에 맞는지 확인
             if (product.getQuantity() < basketQuantity) {
-                logger.warn("상품 재고가 부족하여 배송이 불가능합니다. 상품 ID: {}, 재고 수량: {}, 주문 수량: {}",
-                        product.getId(), product.getQuantity(), basketQuantity);
-                continue;
+                throw new RuntimeException(
+                          "\n" + product.getName() + " 상품의 재고가 부족하여 배송이 불가능합니다"
+                        + "\n" + user.getNickname() + "님이 현재 선택하신 상품 남은 재고 수량 : " + product.getQuantity()
+                        + "\n" + user.getNickname() + "님이 현재 선택하신 상품 주문 수량 : " + basketQuantity);
             }
 
             DeliveryDTO deliveryDTO = new DeliveryDTO();
