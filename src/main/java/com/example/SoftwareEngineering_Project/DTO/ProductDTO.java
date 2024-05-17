@@ -20,6 +20,7 @@ public class ProductDTO {
     private String mediaUrl;
     private Category category;
     private Long userId;
+    private UserDTO user;
 
     public static ProductDTO entityToDto(ProductEntity productEntity) {
         return new ProductDTO(
@@ -30,7 +31,8 @@ public class ProductDTO {
                 productEntity.getQuantity(),
                 productEntity.getMediaUrl(),
                 productEntity.getCategory(),
-                productEntity.getUser().getId()
+                productEntity.getUser().getId(),
+                UserDTO.entityToDto(productEntity.getUser())
         );
     }
 
