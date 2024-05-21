@@ -36,9 +36,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDTO createReview(ReviewDTO reviewDTO, MultipartFile mediaFile) {
         UserEntity user = userRepository.findById(reviewDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. id: " + reviewDTO.getUserId()));
+                .orElseThrow(() -> new RuntimeException("유저의 id가 " + reviewDTO.getUserId() + "번인 사용자를 찾을 수 없습니다."));
         ProductEntity product = productRepository.findById(reviewDTO.getProductId())
-                .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다. id: " + reviewDTO.getProductId()));
+                .orElseThrow(() -> new RuntimeException("제품의 id가" + reviewDTO.getProductId() + "번인 제품을 찾을 수 없습니다."));
 
         String mediaUrl = null;
         if (mediaFile != null && !mediaFile.isEmpty()) {
@@ -84,7 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
                 storage.create(blobInfo, mediaFile.getBytes());
                 mediaUrl = "https://storage.googleapis.com/olympick/" + fileName;
             } catch (IOException e) {
-                throw new RuntimeException("미디어 파일 업로드 중 오류가 발생했습니다.", e);
+                throw new RuntimeException("미디어 파일 업로드 중 오류가 발생했습니다. 오류 내용 : ", e);
             }
         }
 
@@ -100,9 +100,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDTO toggleReviewLike(Long reviewId, Long userId) {
         ReviewEntity reviewEntity = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. reviewId: " + reviewId));
+                .orElseThrow(() -> new IllegalArgumentException("리뷰 id가 " + reviewId + "번인 해당 리뷰가 존재하지 않습니다."));
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다. userId: " + userId));
+                .orElseThrow(() -> new IllegalArgumentException("유저 id가" + userId + "번인 사용자가 존재하지 않습니다."));
 
         if (reviewEntity.getLikedUsers().contains(userEntity)) {
             reviewEntity.getLikedUsers().remove(userEntity);
@@ -124,7 +124,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDTO getReviewById(Long id) {
         ReviewEntity reviewEntity = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다. id: " + id));
+                .orElseThrow(() -> new RuntimeException("리뷰 id가 " + id + "번인 리뷰를 찾을 수 없습니다."));
         return ReviewDTO.entityToDto(reviewEntity);
     }
 
@@ -141,7 +141,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewDTO> getReviewsByProductId(Long productId) {
         ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다. id: " + productId));
+                .orElseThrow(() -> new RuntimeException("제품의 id가 " + productId + "번인 제품을 찾을 수 없습니다."));
         List<ReviewEntity> reviewEntities = reviewRepository.findByProduct(product);
         return reviewEntities.stream()
                 .map(ReviewDTO::entityToDto)
@@ -152,7 +152,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewDTO> getReviewsByUserId(Long userId) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. id: " + userId));
+                .orElseThrow(() -> new RuntimeException("유저 id가 " + userId + "번인 사용자를 찾을 수 없습니다."));
         List<ReviewEntity> reviewEntities = reviewRepository.findByUser(user);
         return reviewEntities.stream()
                 .map(ReviewDTO::entityToDto)
@@ -163,9 +163,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDTO updateReview(Long id, ReviewDTO reviewDTO) {
         ReviewEntity reviewEntity = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다. id: " + id));
+                .orElseThrow(() -> new RuntimeException("리뷰 id가 " + id + "번인 리뷰를 찾을 수 없습니다."));
         ProductEntity product = productRepository.findById(reviewDTO.getProductId())
-                .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다. id: " + reviewDTO.getProductId()));
+                .orElseThrow(() -> new RuntimeException("제품의 id가 " + reviewDTO.getProductId() + "번인 제품을 찾을 수 없습니다."));
 
         reviewEntity.setTitle(reviewDTO.getTitle());
         reviewEntity.setContent(reviewDTO.getContent());
@@ -174,7 +174,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewEntity.setProduct(product);
 
         ReviewEntity updatedReview = reviewRepository.save(reviewEntity);
-        logger.info("리뷰 업데이트 완료! " + updatedReview);
+        logger.info("리뷰 id가 " + updatedReview + "번인 리뷰 업데이트 완료!");
         return ReviewDTO.entityToDto(updatedReview);
     }
 
@@ -182,8 +182,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReview(Long id) {
         ReviewEntity reviewEntity = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("리뷰를 찾을 수 없습니다. id: " + id));
+                .orElseThrow(() -> new RuntimeException("리뷰 id가 " + id + "번인 리뷰를 찾을 수 없습니다."));
         reviewRepository.delete(reviewEntity);
-        logger.info("리뷰 삭제 완료! id: " + id);
+        logger.info("리뷰 id가 " + id + "번인 리뷰 삭제 완료!");
     }
 }
