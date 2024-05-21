@@ -32,7 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProductRepository productRepository;
     private final Storage storage;
 
-    //리뷰 작성ㅣ
+    //리뷰 작성
     @Override
     public ReviewDTO createReview(ReviewDTO reviewDTO, MultipartFile mediaFile) {
         UserEntity user = userRepository.findById(reviewDTO.getUserId())
