@@ -3,9 +3,9 @@ package com.example.SoftwareEngineering_Project.Controller;
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
 import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
-import com.example.SoftwareEngineering_Project.Enum.Category;
 import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import com.example.SoftwareEngineering_Project.Service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.SneakyThrows;
 import java.util.List;
 import java.util.Map;
 
@@ -24,10 +25,13 @@ public class ProductController {
     private final ProductService productService;
 
     //상품 등록, 컨트롤러 메서드에서 @RequestBody 어노테이션을 사용할 때는 하나의 객체만 매핑할 수 있음
+    @SneakyThrows
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ProductDTO> createProduct(@RequestPart("productData") ProductDTO productDTO,
-                                                    @RequestPart(value = "mediaFile", required = false) MultipartFile mediaFile) {
-        ProductDTO createdProduct = productService.createProduct(productDTO, mediaFile);
+    public ResponseEntity<ProductDTO> createProduct(@RequestPart("productData") String productData,
+                                                    @RequestPart(value = "mediaData", required = false) MultipartFile mediaData) {
+        ObjectMapper mapper = new ObjectMapper();
+        ProductDTO productDTO = mapper.readValue(productData, ProductDTO.class);
+        ProductDTO createdProduct = productService.createProduct(productDTO, mediaData);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 

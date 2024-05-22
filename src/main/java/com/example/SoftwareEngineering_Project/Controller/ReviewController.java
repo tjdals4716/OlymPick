@@ -2,11 +2,14 @@ package com.example.SoftwareEngineering_Project.Controller;
 
 import com.example.SoftwareEngineering_Project.DTO.ReviewDTO;
 import com.example.SoftwareEngineering_Project.Service.ReviewService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -18,9 +21,12 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     //리뷰 작성
-    @PostMapping
-    public ResponseEntity<ReviewDTO> createReview(@RequestPart("reviewData") ReviewDTO reviewDTO,
+    @SneakyThrows
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ReviewDTO> createReview(@RequestPart("reviewData") String reviewData,
                                                   @RequestPart(value = "mediaFile", required = false) MultipartFile mediaFile) {
+        ObjectMapper mapper = new ObjectMapper();
+        ReviewDTO reviewDTO = mapper.readValue(reviewData, ReviewDTO.class);
         ReviewDTO createdReview = reviewService.createReview(reviewDTO, mediaFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
