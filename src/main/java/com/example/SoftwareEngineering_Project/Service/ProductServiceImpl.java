@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO createProduct(ProductDTO productDTO, MultipartFile mediaFile) {
         UserEntity userEntity = userRepository.findById(productDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + productDTO.getUserId()));
+                .orElseThrow(() -> new RuntimeException("유저의 id가 " + productDTO.getUserId() + "번인 사용자를 찾을 수 없습니다."));
         String mediaUrl = null;
         if (mediaFile != null && !mediaFile.isEmpty()) {
             try {
@@ -104,10 +104,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public BasketDTO addToBasket(Long userId, Long productId, Long quantity) {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + userId));
+                .orElseThrow(() -> new RuntimeException("유저의 id가 " + userId + "번인 사용자를 찾을 수 없습니다."));
 
         ProductEntity productEntity = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다. productId: " + productId));
+                .orElseThrow(() -> new RuntimeException("상품 id가 " + productId + "번인 상품을 찾을 수 없습니다."));
 
         BasketEntity existingBasketItem = basketRepository.findByUser_IdAndProduct_Id(userId, productId);
 
@@ -171,7 +171,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + userId));
+                .orElseThrow(() -> new RuntimeException("유저의 id가 " + userId + "번인 사용자를 찾을 수 없습니다."));
 
         List<BasketEntity> baskets = basketRepository.findByUser_Id(userId);
 
@@ -225,10 +225,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public DeliveryDTO createDeliveryForBasketItem(Long userId, Long basketId, DeliveryStatus status) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + userId));
+                .orElseThrow(() -> new RuntimeException("유저의 id가 " + userId + "번인 사용자를 찾을 수 없습니다."));
 
         BasketEntity basket = basketRepository.findById(basketId)
-                .orElseThrow(() -> new RuntimeException("장바구니를 찾을 수 없습니다. basketId: " + basketId));
+                .orElseThrow(() -> new RuntimeException("장바구니의 id가 " + basketId + "번인 장바구니를 찾을 수 없습니다."));
 
         if (basket.getUser().getId() != userId) {
             throw new RuntimeException("사용자의 장바구니가 아닙니다. userId: " + userId + ", basketId: " + basketId);
@@ -244,9 +244,9 @@ public class ProductServiceImpl implements ProductService {
         //주문 수량이 재고량 한계치에 맞는지 확인
         if (product.getQuantity() < basketQuantity) {
             throw new RuntimeException(
-                    "\n" + product.getName() + " 상품의 재고가 부족하여 배송이 불가능합니다"
-                            + "\n" + user.getNickname() + "님이 현재 선택하신 상품 남은 재고 수량 : " + product.getQuantity()
-                            + "\n" + user.getNickname() + "님이 현재 선택하신 상품 주문 수량 : " + basketQuantity);
+                      "\n" + product.getName() + " 상품의 재고가 부족하여 배송이 불가능합니다"
+                    + "\n" + user.getNickname() + "님이 현재 선택하신 상품 남은 재고 수량 : " + product.getQuantity()
+                    + "\n" + user.getNickname() + "님이 현재 선택하신 상품 주문 수량 : " + basketQuantity);
         }
 
         DeliveryDTO deliveryDTO = new DeliveryDTO();
@@ -276,7 +276,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status) {
         DeliveryEntity deliveryEntity = deliveryRepository.findById(deliveryId)
-                .orElseThrow(() -> new RuntimeException("배송을 찾을 수 없습니다. deliveryId: " + deliveryId));
+                .orElseThrow(() -> new RuntimeException("배송 id가 " + deliveryId + "번인 배송을 찾을 수 없습니다."));
 
         BasketEntity basketEntity = deliveryEntity.getBasket();
 
@@ -311,7 +311,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO getProductById(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다. id: " + id));
+                .orElseThrow(() -> new RuntimeException("유저의 id가 " + id + "번인 사용자를 찾을 수 없습니다."));
         return ProductDTO.entityToDto(productEntity);
     }
 
@@ -319,10 +319,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         UserEntity userEntity = userRepository.findById(productDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. userId: " + productDTO.getUserId()));
+                .orElseThrow(() -> new RuntimeException("유저의 id가 " + productDTO.getUserId() + "번인 사용자를 찾을 수 없습니다."));
 
         ProductEntity existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다. id: " + id));
+                .orElseThrow(() -> new RuntimeException("상품의 id가 " + id + "번인 상품을 찾을 수 없습니다. id: "));
 
         Long newQuantity = productDTO.getQuantity();
 
@@ -343,10 +343,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다. id: " + id));
+                .orElseThrow(() -> new RuntimeException("상품의 id가 " + id + "번인 상품을 찾을 수 없습니다. id: "));
 
         productRepository.delete(productEntity);
-        logger.info("상품 삭제 완료! id: " + id);
+        logger.info("상품 id가 " + id + "번인 상품 삭제 완료!");
     }
 
     //카테고리별 상품 조회
