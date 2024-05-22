@@ -8,6 +8,7 @@ import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import com.example.SoftwareEngineering_Project.Service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public class ProductController {
     private final ProductService productService;
 
     //상품 등록, 컨트롤러 메서드에서 @RequestBody 어노테이션을 사용할 때는 하나의 객체만 매핑할 수 있음
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ProductDTO> createProduct(@RequestPart("productData") ProductDTO productDTO,
                                                     @RequestPart(value = "mediaFile", required = false) MultipartFile mediaFile) {
         ProductDTO createdProduct = productService.createProduct(productDTO, mediaFile);
@@ -31,8 +32,10 @@ public class ProductController {
     }
 
     //상품 장바구니에 담기, 동일한 상품일 경우 개수만 증가
-    @PostMapping("/basket/{userId}/{productId}")
-    public ResponseEntity<BasketDTO> addToBasket(@PathVariable Long productId, @PathVariable Long userId, @RequestBody Map<String, Long> requestBody) {
+    @PostMapping(value ="/basket/{userId}/{productId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<BasketDTO> addToBasket(@PathVariable Long productId,
+                                                 @PathVariable Long userId,
+                                                 @RequestBody Map<String, Long> requestBody) {
             Long quantity = requestBody.getOrDefault("quantity", 1L); // 기본값 1
             BasketDTO basketDTO = productService.addToBasket(userId, productId, quantity);
             return ResponseEntity.status(HttpStatus.CREATED).body(basketDTO);
@@ -40,7 +43,8 @@ public class ProductController {
 
     //상품 장바구니에서 빼기, 동일한 상품일 경우 개수만 감소, 1에서 뺄 경우 장바구니에서 상품 삭제
     @DeleteMapping("/basket/{userId}/{productId}")
-    public ResponseEntity<BasketDTO> removeFromBasket(@PathVariable Long productId, @PathVariable Long userId) {
+    public ResponseEntity<BasketDTO> removeFromBasket(@PathVariable Long productId,
+                                                      @PathVariable Long userId) {
         BasketDTO basketDTO = productService.removeFromBasket(userId, productId);
         if (basketDTO != null) {
             return ResponseEntity.ok(basketDTO);
@@ -62,7 +66,8 @@ public class ProductController {
 
     //사용자 장바구니에 있는 상품을 선택적으로 배송
     @PostMapping("/delivery/basket/{basketId}")
-    public ResponseEntity<DeliveryDTO> createDeliveryForBasketItem(@PathVariable Long basketId, @RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<DeliveryDTO> createDeliveryForBasketItem(@PathVariable Long basketId,
+                                                                   @RequestBody Map<String, Object> requestBody) {
         Long userId = ((Number) requestBody.get("userId")).longValue();
         String statusString = (String) requestBody.get("status");
         DeliveryStatus status = DeliveryStatus.valueOf(statusString);
@@ -73,7 +78,8 @@ public class ProductController {
 
     //배송 상태 수정
     @PutMapping("/delivery/{deliveryId}")
-    public ResponseEntity<DeliveryDTO> updateDeliveryStatus(@PathVariable Long deliveryId, @RequestBody DeliveryDTO deliveryDTO) {
+    public ResponseEntity<DeliveryDTO> updateDeliveryStatus(@PathVariable Long deliveryId,
+                                                            @RequestBody DeliveryDTO deliveryDTO) {
         DeliveryDTO updatedDelivery = productService.updateDeliveryStatus(deliveryId, deliveryDTO.getStatus());
         return ResponseEntity.ok(updatedDelivery);
     }
@@ -94,7 +100,8 @@ public class ProductController {
 
     //상품 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,
+                                                    @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(updatedProduct);
     }
