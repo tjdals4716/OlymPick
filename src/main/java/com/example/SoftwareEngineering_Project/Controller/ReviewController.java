@@ -23,8 +23,7 @@ public class ReviewController {
     //리뷰 작성
     @SneakyThrows
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ReviewDTO> createReview(@RequestPart("reviewData") String reviewData,
-                                                  @RequestPart(value = "mediaFile", required = false) MultipartFile mediaFile) {
+    public ResponseEntity<ReviewDTO> createReview(@RequestPart("reviewData") String reviewData, @RequestPart(value = "mediaFile", required = false) MultipartFile mediaFile) {
         ObjectMapper mapper = new ObjectMapper();
         ReviewDTO reviewDTO = mapper.readValue(reviewData, ReviewDTO.class);
         ReviewDTO createdReview = reviewService.createReview(reviewDTO, mediaFile);
