@@ -22,6 +22,7 @@ public class ProductMessageServiceImpl implements ProductMessageService {
     private final ProductRepository productRepository;
     private final WebSocketMessageHandler webSocketMessageHandler;
 
+    //쪽지 전송
     @Override
     public ProductMessageDTO createProductMessage(ProductMessageDTO productMessageDTO) {
         UserEntity sender = userRepository.findById(productMessageDTO.getSender())
@@ -45,6 +46,7 @@ public class ProductMessageServiceImpl implements ProductMessageService {
         return ProductMessageDTO.entityToDto(savedProductMessage);
     }
 
+    //특정 상품과 관련된 쪽지 목록 조회
     @Override
     public List<ProductMessageDTO> getProductMessagesByProductId(Long productId) {
         List<ProductMessageEntity> productMessageEntities = productMessageRepository.findByProductId(productId);
@@ -53,6 +55,7 @@ public class ProductMessageServiceImpl implements ProductMessageService {
                 .collect(Collectors.toList());
     }
 
+    //특정 발신자가 보낸 쪽지 목록 조회
     @Override
     public List<ProductMessageDTO> getProductMessagesBySenderId(Long senderId) {
         List<ProductMessageEntity> productMessageEntities = productMessageRepository.findBySenderId(senderId);
@@ -61,6 +64,7 @@ public class ProductMessageServiceImpl implements ProductMessageService {
                 .collect(Collectors.toList());
     }
 
+    //특정 수신자가 받은 쪽지 목록 조회
     @Override
     public List<ProductMessageDTO> getProductMessagesByReceiverId(Long receiverId) {
         List<ProductMessageEntity> productMessageEntities = productMessageRepository.findByReceiverId(receiverId);
