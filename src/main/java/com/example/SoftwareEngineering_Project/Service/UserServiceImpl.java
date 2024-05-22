@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserByUid(String uid) {
         UserEntity userEntity = userRepository.findByUid(uid)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. uid: " + uid));
+                .orElseThrow(() -> new RuntimeException("유저의 uid가 " + uid + "인 사용자를 찾을 수 없습니다."));
         return UserDTO.entityToDto(userEntity);
     }
 
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(String uid, UserDTO userDTO) {
         UserEntity userEntity = userRepository.findByUid(uid)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. uid: " + uid));
+                .orElseThrow(() -> new RuntimeException("유저의 uid가 " + uid + "인 사용자를 찾을 수 없습니다."));
 
         userEntity.setPassword(userDTO.getPassword());
         userEntity.setNickname(userDTO.getNickname());
@@ -86,9 +86,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String uid) {
         UserEntity userEntity = userRepository.findByUid(uid)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. uid: " + uid));
+                .orElseThrow(() -> new RuntimeException("유저의 uid가 " + uid + "인 사용자를 찾을 수 없습니다."));
 
         userRepository.delete(userEntity);
-        logger.info("회원탈퇴 완료! uid: " + uid);
+        logger.info("유저의 uid가 " + uid + "인 회원탈퇴 완료!");
     }
 }
