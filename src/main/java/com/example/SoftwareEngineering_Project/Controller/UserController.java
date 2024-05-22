@@ -37,14 +37,14 @@ public class UserController {
 
     //아이디 중복 확인
     @GetMapping("/check-uid")
-    public ResponseEntity<Boolean> isUidDuplicate(@RequestParam String uid) {
+    public ResponseEntity<Boolean> isUidDuplicate(@RequestBody String uid) {
         boolean isDuplicate = userService.isUidDuplicate(uid);
         return ResponseEntity.ok(isDuplicate);
     }
 
     //닉네임 중복 확인
     @GetMapping("/check-nickname")
-    public ResponseEntity<Boolean> isNicknameDuplicate(@RequestParam String nickname) {
+    public ResponseEntity<Boolean> isNicknameDuplicate(@RequestBody String nickname) {
         boolean isDuplicate = userService.isNicknameDuplicate(nickname);
         return ResponseEntity.ok(isDuplicate);
     }
