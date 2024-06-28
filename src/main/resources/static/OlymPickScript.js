@@ -27,11 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('로그인 성공');
                     window.location.href = 'OlymPick 메인페이지.html'; // 로그인 성공 시 메인 페이지로 이동
                 })
-                .catch(error => console.error('로그인 에러:', error));
+                .catch(error => {
+                    console.error('로그인 에러:', error);
+                    alert('아이디나 비밀번호가 틀렸거나 존재하지 않습니다');
+                });
         });
     }
 
-    // 회원가입 처리
+    // 회원가입
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', function(event) {
@@ -291,4 +294,55 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+// 프로필 조회
+function loadProfile() {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'OlymPick 로그인.html';
+        return;
+    }
+
+    fetch(`http://localhost:8080/users/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('profile-uid').textContent = data.uid;
+            document.getElementById('profile-nickname').textContent = data.nickname;
+            document.getElementById('profile-phoneNumber').textContent = data.phoneNumber;
+            document.getElementById('profile-gender').textContent = data.gender;
+            document.getElementById('profile-age').textContent = data.age;
+            document.getElementById('profile-mbti').textContent = data.mbti;
+        })
+        .catch(error => console.error('프로필 로드 에러 :', error));
+}
+
+// 회원 탈퇴
+function confirmDeleteAccount() {
+    const confirmation = confirm('정말 탈퇴하시겠습니까? 입력한 정보가 모두 삭제됩니다.');
+    if (confirmation) {
+        deleteAccount();
+    }
+}
+
+function deleteAccount() {
+    const userId = localStorage.getItem('userId');
+
+    fetch(`http://localhost:8080/users/${userId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (response.ok) {
+                alert('회원 탈퇴가 완료되었습니다.');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('nickname');
+                window.location.href = 'OlymPick 로그인.html';
+            } else {
+                throw new Error('회원 탈퇴 실패');
+            }
+        })
+        .catch(error => console.error('회원 탈퇴 에러:', error));
+}
+
 
