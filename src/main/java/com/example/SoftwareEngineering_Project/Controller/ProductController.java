@@ -27,7 +27,7 @@ public class ProductController {
     //상품 등록, 컨트롤러 메서드에서 @RequestBody 어노테이션을 사용할 때는 하나의 객체만 매핑할 수 있음
     @SneakyThrows
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ProductDTO> createProduct(@RequestPart("productData") String productData, @RequestPart(value = "mediaData", required = false) MultipartFile mediaData) {
+    public ResponseEntity<ProductDTO> createProduct(@RequestPart("productData") String productData, @RequestPart(value = "mediaData") MultipartFile mediaData) {
         ObjectMapper mapper = new ObjectMapper();
         ProductDTO productDTO = mapper.readValue(productData, ProductDTO.class);
         ProductDTO createdProduct = productService.createProduct(productDTO, mediaData);
