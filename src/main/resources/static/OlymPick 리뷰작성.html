@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 작성</title>
+    <link rel="stylesheet" href="OlymPick 리뷰작성.css">
+</head>
+<body>
+<div class="main-container">
+    <header>
+        <div class="main-nav">
+            <ul>
+                <li><a href="OlymPick 메인페이지.html">메인페이지로 돌아가기</a></li>
+            </ul>
+        </div>
+    </header>
+    <section class="review-form-section">
+        <h2>리뷰 작성하기</h2>
+        <form id="review-form">
+            <input type="hidden" id="product-id" value="">
+            <div class="form-group">
+                <label for="review-title">리뷰 제목</label>
+                <input type="text" id="review-title" placeholder="리뷰 제목을 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label for="review-content">리뷰 내용</label>
+                <textarea id="review-content" placeholder="리뷰 내용을 입력하세요" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="review-media">리뷰 미디어</label>
+                <input type="file" id="review-media">
+            </div>
+            <button type="submit">리뷰 작성</button>
+        </form>
+    </section>
+</div>
+<script src="OlymPickScript.js"></script>
+</body>
+</html>

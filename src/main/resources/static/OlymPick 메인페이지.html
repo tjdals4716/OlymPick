@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>올림픽 굿즈 스토어</title>
+    <link rel="stylesheet" href="OlymPick 메인페이지.css">
+</head>
+<body onload="loadProducts()">
+<div class="main-container">
+    <header>
+        <div class="main-nav">
+            <ul>
+                <li><a href="#">ALL</a></li>
+                <li><a href="#">COLLABO</a></li>
+                <li><a href="#">OUTER</a></li>
+                <li><a href="#">TOP</a></li>
+                <li><a href="#">BOTTOM</a></li>
+                <li><a href="#">MEN</a></li>
+                <li><a href="#">WOMEN</a></li>
+                <li><a href="#">ACC</a></li>
+                <li><a href="#">SALE</a></li>
+            </ul>
+        </div>
+        <div class="user-section">
+            <div class="user-profile">
+<!--                <img src="profile.png" alt="프로필 사진">-->
+                <div class="profile-details">
+                    <span class="username">사용자 이름</span>
+                    <button onclick="logout()">로그아웃</button>
+                </div>
+            </div>
+            <button class="cart-button" onclick="goToCart()">장바구니</button>
+            <button class="register-product-button" onclick="window.location.href='OlymPick 상품등록.html'">상품 등록</button>
+        </div>
+    </header>
+    <section class="goods-list-section">
+        <h2>상품 목록</h2>
+        <div class="goods-list" id="goods-list">
+            <!-- 상품 목록이 동적으로 추가될 영역 -->
+        </div>
+    </section>
+    <section class="auction-section">
+        <h2>경매 참여</h2>
+        <div class="auction-item">
+            <h3>올림픽 티셔츠</h3>
+            <p>현재 입찰가: ₩20,000</p>
+            <input type="number" id="bid-amount" placeholder="입찰 금액 입력">
+            <button onclick="placeBid()">입찰하기</button>
+        </div>
+    </section>
+</div>
+<script src="OlymPickScript.js"></script>
+</body>
+</html>

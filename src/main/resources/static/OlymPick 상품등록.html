@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OlymPick 상품등록</title>
+    <link rel="stylesheet" href="OlymPick 상품등록.css">
+</head>
+<body>
+<div class="product-register-container">
+    <h2>상품 등록</h2>
+    <form id="product-register-form" enctype="multipart/form-data">
+        <label for="product-name">상품명:</label>
+        <input type="text" id="product-name" name="name" required>
+
+        <label for="product-content">상품 설명:</label>
+        <textarea id="product-content" name="content" required></textarea>
+
+        <label for="product-price">가격:</label>
+        <input type="text" id="product-price" name="price" required>
+
+        <label for="product-quantity">수량:</label>
+        <input type="number" id="product-quantity" name="quantity" required>
+
+        <label for="product-category">카테고리:</label>
+        <select id="product-category" name="category" required>
+            <option value="COLLABO">COLLABO</option>
+            <option value="OUTER">OUTER</option>
+            <option value="TOP">TOP</option>
+            <option value="BOTTOM">BOTTOM</option>
+            <option value="MEN">MEN</option>
+            <option value="WOMEN">WOMEN</option>
+            <option value="ACC">ACC</option>
+            <option value="SALE">SALE</option>
+        </select>
+
+        <label for="product-media">미디어 파일:</label>
+        <input type="file" id="product-media" name="media">
+
+        <button type="submit">등록</button>
+    </form>
+</div>
+<script src="OlymPickScript.js"></script>
+</body>
+</html>

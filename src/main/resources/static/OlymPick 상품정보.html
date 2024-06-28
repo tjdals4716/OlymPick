@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 정보</title>
+    <link rel="stylesheet" href="OlymPick 상품정보.css">
+</head>
+<body onload="loadProductDetails()">
+<div class="main-container">
+    <header>
+        <div class="main-nav">
+            <ul>
+                <li><a href="OlymPick 메인페이지.html">메인페이지로 돌아가기</a></li>
+            </ul>
+        </div>
+    </header>
+    <section class="product-details-section">
+        <div id="product-details" class="product-details">
+            <!-- 상품 정보가 동적으로 추가될 영역 -->
+        </div>
+        <div class="action-buttons">
+            <button class="cart-button" onclick="addToCart()">장바구니에 담기</button>
+            <button class="purchase-button" onclick="purchaseProduct()">구매하기</button>
+        </div>
+        <div id="reviews" class="reviews-section">
+            <!-- 리뷰 목록이 동적으로 추가될 영역 -->
+        </div>
+    </section>
+</div>
+<script src="OlymPickScript.js"></script>
+</body>
+</html>
