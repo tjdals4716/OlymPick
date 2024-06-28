@@ -1,4 +1,4 @@
-//로그인
+// 로그인
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
@@ -22,14 +22,54 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 })
                 .then(data => {
-                    console.log('로그인 응답 데이터:', data); // 응답 데이터 확인용 로그
                     localStorage.setItem('userId', data.id); // 로그인된 사용자 ID 저장
                     localStorage.setItem('nickname', data.nickname); // 사용자 닉네임 저장
-                    console.log('Logged in userId:', data.id); // userId 확인용 로그
                     alert('로그인 성공');
                     window.location.href = 'OlymPick 메인페이지.html'; // 로그인 성공 시 메인 페이지로 이동
                 })
                 .catch(error => console.error('로그인 에러:', error));
+        });
+    }
+
+    // 회원가입 처리
+    const signupForm = document.getElementById('signup-form');
+    if (signupForm) {
+        signupForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // 기본 폼 제출 동작을 막음
+            const uid = document.getElementById('uid').value;
+            const password = document.getElementById('password').value;
+            const nickname = document.getElementById('nickname').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const gender = document.getElementById('gender').value;
+            const age = document.getElementById('age').value;
+            const mbti = document.getElementById('mbti').value;
+
+            const data = { uid, password, nickname, phoneNumber, gender, age, mbti };
+
+            console.log('회원가입 데이터:', data); // 요청 전 데이터 확인
+
+            fetch('http://localhost:8080/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    console.log('응답 상태 코드:', response.status); // 응답 상태 코드 확인
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('회원가입 실패');
+                    }
+                })
+                .then(data => {
+                    console.log('회원가입 성공 데이터:', data); // 성공 시 응답 데이터 확인
+                    alert('회원가입이 완료되었습니다!');
+                    window.location.href = 'OlymPick 로그인.html'; // 회원가입 성공 시 로그인 페이지로 이동
+                })
+                .catch(error => {
+                    console.error('회원가입 에러:', error); // 에러 메시지 확인
+                    alert('회원가입 실패');
+                });
         });
     }
 
@@ -251,3 +291,4 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
