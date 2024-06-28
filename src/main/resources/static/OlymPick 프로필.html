@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 프로필</title>
+    <link rel="stylesheet" href="OlymPick 프로필.css">
+</head>
+<body onload="loadProfile()">
+<div class="profile-container">
+    <h2>내 프로필</h2>
+    <div class="profile-info">
+        <p><strong>아이디:</strong> <span id="profile-uid"></span></p>
+        <p><strong>닉네임:</strong> <span id="profile-nickname"></span></p>
+        <p><strong>전화번호:</strong> <span id="profile-phoneNumber"></span></p>
+        <p><strong>성별:</strong> <span id="profile-gender"></span></p>
+        <p><strong>나이:</strong> <span id="profile-age"></span></p>
+        <p><strong>MBTI:</strong> <span id="profile-mbti"></span></p>
+    </div>
+    <button class="main-page-button" onclick="window.location.href='OlymPick 메인페이지.html'">메인페이지로 돌아가기</button>
+    <button onclick="window.location.href='OlymPick 프로필수정.html'">프로필 수정</button>
+    <button class="delete-button" onclick="confirmDeleteAccount()">회원 탈퇴</button>
+</div>
+<script src="OlymPickScript.js"></script>
+</body>
+</html>
