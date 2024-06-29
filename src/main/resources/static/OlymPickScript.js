@@ -158,26 +158,77 @@ function goToCart() {
     window.location.href = 'OlymPick 장바구니.html'; // 장바구니 페이지로 이동
 }
 
-// 상품 목록 조회
-function loadProducts() {
+// 전체 상품 목록 조회
+function loadAllProducts() {
+    document.querySelector('.goods-list-section h2').textContent = '전체 상품 목록'; // 제목 업데이트
     fetch('http://localhost:8080/products')
         .then(response => response.json())
         .then(data => {
             const goodsList = document.getElementById('goods-list');
-            data.forEach(product => {
-                const goodsItem = document.createElement('div');
-                goodsItem.className = 'goods-item';
-                goodsItem.innerHTML = `
-                    <img src="${product.mediaUrl}" alt="${product.name}">
-                    <h3>${product.name}</h3>
-                    <p>가격 : ₩${product.price}</p>
-                    <button onclick="viewProduct(${product.id})">상품 보기</button>
-                `;
-                goodsList.appendChild(goodsItem);
-            });
+            goodsList.innerHTML = ''; // 기존 상품 목록 초기화
+            if (data.length === 0) {
+                goodsList.innerHTML = '<p>상품이 존재하지 않습니다</p>'; // 상품이 없을 때 메시지 표시
+            } else {
+                data.forEach(product => {
+                    const goodsItem = document.createElement('div');
+                    goodsItem.className = 'goods-item';
+                    goodsItem.innerHTML = `
+                        <img src="${product.mediaUrl}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>가격 : ₩${product.price}</p>
+                        <button onclick="viewProduct(${product.id})">상품 보기</button>
+                    `;
+                    goodsList.appendChild(goodsItem);
+                });
+            }
         })
         .catch(error => console.error('상품 목록 로드 에러:', error));
 }
+
+// 특정 카테고리의 상품 목록 조회
+function loadProductsByCategory(category) {
+    document.querySelector('.goods-list-section h2').textContent = `${category} 상품 목록`; // 제목 업데이트
+    fetch(`http://localhost:8080/products/category/${category}`)
+        .then(response => response.json())
+        .then(data => {
+            const goodsList = document.getElementById('goods-list');
+            goodsList.innerHTML = ''; // 기존 상품 목록 초기화
+            if (data.length === 0) {
+                goodsList.innerHTML = '<p>상품이 존재하지 않습니다</p>'; // 상품이 없을 때 메시지 표시
+            } else {
+                data.forEach(product => {
+                    const goodsItem = document.createElement('div');
+                    goodsItem.className = 'goods-item';
+                    goodsItem.innerHTML = `
+                        <img src="${product.mediaUrl}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>가격 : ₩${product.price}</p>
+                        <button onclick="viewProduct(${product.id})">상품 보기</button>
+                    `;
+                    goodsList.appendChild(goodsItem);
+                });
+            }
+        })
+        .catch(error => console.error('카테고리별 상품 목록 로드 에러:', error));
+}
+
+// 카테고리 링크 클릭 이벤트 추가
+document.addEventListener('DOMContentLoaded', function() {
+    loadAllProducts(); // 기본 설정으로 전체 상품 목록 로드
+
+    const categoryLinks = document.querySelectorAll('.main-nav ul li a');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const category = this.textContent.trim().toUpperCase();
+            if (category === 'ALL') {
+                loadAllProducts();
+            } else {
+                loadProductsByCategory(category);
+            }
+        });
+    });
+});
 
 // 상품 보기 페이지로 이동
 function viewProduct(productId) {
