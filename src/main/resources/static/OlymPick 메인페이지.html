@@ -26,12 +26,16 @@
             <div class="user-profile">
                 <div class="profile-details">
                     <span class="username">사용자 이름</span>
-                    <button onclick="logout()">로그아웃</button>
-                    <button onclick="window.location.href='OlymPick 프로필.html'">내 프로필 보기</button>
+                    <div class="profile-buttons">
+                        <button class="profile-button" onclick="window.location.href='OlymPick 프로필.html'">내 프로필 보기</button>
+                        <button class="logout-button" onclick="logout()">로그아웃</button>
+                    </div>
                 </div>
             </div>
-            <button class="cart-button" onclick="goToCart()">장바구니</button>
-            <button class="register-product-button" onclick="window.location.href='OlymPick 상품등록.html'">상품 등록</button>
+            <div class="action-buttons">
+                <button class="cart-button" onclick="goToCart()">장바구니</button>
+                <button class="register-product-button" onclick="window.location.href='OlymPick 상품등록.html'">상품 등록</button>
+            </div>
         </div>
     </header>
     <section class="goods-list-section">
