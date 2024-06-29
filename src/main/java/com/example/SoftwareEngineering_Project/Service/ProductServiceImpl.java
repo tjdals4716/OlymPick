@@ -4,6 +4,7 @@ import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.Entity.BasketEntity;
 import com.example.SoftwareEngineering_Project.Entity.DeliveryEntity;
 import com.example.SoftwareEngineering_Project.Enum.BasketStatus;
+import com.example.SoftwareEngineering_Project.Enum.Category;
 import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import com.example.SoftwareEngineering_Project.Repository.BasketRepository;
 import com.example.SoftwareEngineering_Project.DTO.BasketDTO;
@@ -350,9 +351,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     //카테고리별 상품 조회
-    @Override
     public List<ProductDTO> getProductsByCategory(String category) {
-        List<ProductEntity> products = productRepository.findByCategory(category);
+        Category categoryEnum = Category.valueOf(category);
+        List<ProductEntity> products = productRepository.findByCategory(categoryEnum);
         return products.stream()
                 .map(ProductDTO::entityToDto)
                 .collect(Collectors.toList());
