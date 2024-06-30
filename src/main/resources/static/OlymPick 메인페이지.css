@@ -143,20 +143,32 @@ header {
     width: 200px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center; /* 중앙 정렬 추가 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .goods-item img {
-    max-width: 100%;
-    height: auto;
+    width: 200px;
+    height: 200px;
     margin-bottom: 10px;
 }
 
 .goods-item h3 {
     margin: 0 0 10px;
+    font-size: 16px;
+    min-height: 2em; /* 제목의 최소 높이 설정 */
 }
 
 .goods-item p {
     margin: 0 0 10px;
+    font-size: 14px;
+}
+
+.goods-item .button-container {
+    margin-top: auto; /* 버튼을 하단으로 밀기 위해 auto 사용 */
+    width: 100%;
 }
 
 .goods-item button {
@@ -214,3 +226,13 @@ header {
 .auction-item button:hover {
     background-color: #4cae4c;
 }
+
+/* 카테고리 상품 없을때 글 정렬 */
+.no-products {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #555;
+    width: 100%; /* 중앙 정렬을 위해 추가 */
+}
+

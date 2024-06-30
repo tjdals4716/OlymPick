@@ -6,25 +6,28 @@
     <title>OlymPick 장바구니</title>
     <link rel="stylesheet" href="OlymPick 장바구니.css">
 </head>
-<body>
-    <div class="cart-container">
-        <h2>장바구니</h2>
-        <section class="pending-purchases">
-            <h3>구매 대기중인 상품</h3>
-            <ul>
-                <!-- 구매 대기중인 상품 목록, 동적으로 바꿀 예정 -->
-                <li>상품 1</li>
-                <li>상품 2</li>
-            </ul>
-        </section>
-        <section class="completed-purchases">
-            <h3>구매 완료된 상품</h3>
-            <ul>
-                <!-- 구매 완료된 상품 목록, 동적으로 바꿀 예정 -->
-                <li>상품 A</li>
-                <li>상품 B</li>
-            </ul>
-        </section>
-    </div>
+<body onload="loadBasketItems()">
+<div class="cart-container">
+    <h2 id="cart-title">장바구니</h2> <!-- 제목의 ID 추가 -->
+    <section class="pending-purchases">
+        <h3>구매 대기중인 상품</h3>
+        <ul id="pending-purchases-list">
+            <!-- 구매 대기중인 상품 목록, 동적으로 바꿀 예정 -->
+        </ul>
+    </section>
+    <section class="shipping-purchases">
+        <h3>배송중인 상품</h3>
+        <ul id="shipping-purchases-list">
+            <!-- 배송중인 상품 목록, 동적으로 바꿀 예정 -->
+        </ul>
+    </section>
+    <section class="completed-purchases">
+        <h3>구매 완료된 상품</h3>
+        <ul id="completed-purchases-list">
+            <!-- 구매 완료된 상품 목록, 동적으로 바꿀 예정 -->
+        </ul>
+    </section>
+</div>
+<script src="OlymPickScript.js"></script>
 </body>
 </html>

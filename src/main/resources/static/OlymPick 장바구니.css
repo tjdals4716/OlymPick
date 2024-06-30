@@ -1,11 +1,20 @@
-body {
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
+    text-align: left; /* 전체 텍스트 왼쪽 정렬 */
+    overflow: auto; /* 스크롤이 가능하도록 설정 */
+}
+
+body {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    justify-content: center; /* 전체 컨테이너를 중앙에 배치 */
+    align-items: flex-start; /* 상단에 맞추기 위해 변경 */
+    padding-top: 20px; /* 화면 상단 여백 추가 */
+    margin: 0; /* 기본 margin 제거 */
+    height: 100%; /* 전체 높이 설정 */
 }
 
 .cart-container {
@@ -14,9 +23,12 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 600px;
-    text-align: center;
+    max-width: 1200px;
+    text-align: left; /* 컨테이너 내 텍스트 왼쪽 정렬 */
+    margin-top: 20px; /* 컨테이너 상단 여백 추가 */
+    box-sizing: border-box; /* padding 포함한 전체 너비와 높이 계산 */
 }
+
 
 h2 {
     margin-bottom: 20px;
@@ -36,6 +48,10 @@ ul {
     list-style: none;
     padding: 0;
     text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start; /* 아이템들을 왼쪽으로 정렬 */
 }
 
 li {
@@ -44,4 +60,61 @@ li {
     margin-bottom: 5px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    width: 250px; /* 고정 너비 설정 */
+    height: 350px; /* 고정 높이 설정 */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 컨테이너 안 데이터 중앙 정렬 */
+    justify-content: center; /* 컨테이너 안 데이터 수직 중앙 정렬 */
+    position: relative; /* 버튼들을 동일한 위치에 정렬하기 위해 추가 */
+}
+
+.product-info img,
+.goods-item img,
+.basket-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.basket-item h3 {
+    margin: 10px 0 5px; /* 제목과 가격 사이 간격 조정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.basket-item p {
+    margin: 5px 0; /* 수량과 가격 간격 조정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px; /* 버튼과 이미지 사이의 간격 추가 */
+    position: absolute;
+    bottom: 10px; /* 버튼들을 하단에 정렬 */
+}
+
+.basket-item button {
+    background-color: #28a745; /* 초록색으로 변경 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 14px; /* 글자 크기를 조금 줄임 */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.basket-item button:hover {
+    background-color: #218838; /* 어두운 초록색으로 변경 */
+}
+
+/* 중앙에 배치될 텍스트 */
+.no-items {
+    text-align: center; /* 텍스트 중앙 정렬 */
+    width: 100%; /* 부모 요소의 전체 너비 차지 */
+    margin-top: 20px; /* 약간의 상단 여백 추가 */
 }
