@@ -168,6 +168,18 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    // 상품 장바구니에서 전체 개수 제거
+    @Override
+    public void removeAllFromBasket(Long userId, Long productId) {
+        BasketEntity existingBasketItem = basketRepository.findByUser_IdAndProduct_Id(userId, productId);
+        if (existingBasketItem != null) {
+            basketRepository.delete(existingBasketItem);
+            logger.info("장바구니에서 상품 전체 삭제 완료! userId: " + userId + ", productId: " + productId);
+        } else {
+            throw new RuntimeException("장바구니에 해당 상품이 없습니다. userId: " + userId + ", productId: " + productId);
+        }
+    }
+
     //사용자 장바구니에 있는 전체 상품을 배송
     @Override
     public List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status) {
@@ -365,6 +377,15 @@ public class ProductServiceImpl implements ProductService {
         List<ProductEntity> products = productRepository.findByNameContainingIgnoreCase(name);
         return products.stream()
                 .map(ProductDTO::entityToDto)
+                .collect(Collectors.toList());
+    }
+
+    //사용자 장바구니 조회
+    @Override
+    public List<BasketDTO> getUserBasket(Long userId) {
+        List<BasketEntity> basketItems = basketRepository.findByUser_Id(userId);
+        return basketItems.stream()
+                .map(BasketDTO::entityToDto)
                 .collect(Collectors.toList());
     }
 }

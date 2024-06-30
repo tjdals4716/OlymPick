@@ -5,6 +5,7 @@ import com.example.SoftwareEngineering_Project.DTO.DeliveryDTO;
 import com.example.SoftwareEngineering_Project.DTO.ProductDTO;
 import com.example.SoftwareEngineering_Project.Enum.DeliveryStatus;
 import com.example.SoftwareEngineering_Project.Service.ProductService;
+import com.example.SoftwareEngineering_Project.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductService productService;
+    private final UserService userService;
 
     //상품 등록, 컨트롤러 메서드에서 @RequestBody 어노테이션을 사용할 때는 하나의 객체만 매핑할 수 있음
     @SneakyThrows
@@ -52,6 +54,14 @@ public class ProductController {
             return ResponseEntity.noContent().build();
         }
     }
+
+    //상품 장바구니에서 전체 개수 제거
+    @PutMapping("/basket/{userId}/{productId}")
+    public ResponseEntity<Void> removeAllFromBasket(@PathVariable Long userId, @PathVariable Long productId) {
+        productService.removeAllFromBasket(userId, productId);
+        return ResponseEntity.noContent().build();
+    }
+
 
     //장바구니에 있는 전체 상품 배송
     @PostMapping("/delivery/basket")
@@ -123,5 +133,12 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> searchProductsByName(@RequestParam("name") String name) {
         List<ProductDTO> products = productService.searchProductsByName(name);
         return ResponseEntity.ok(products);
+    }
+
+    //사용자 장바구니 조회
+    @GetMapping("/basket/{userId}")
+    public ResponseEntity<List<BasketDTO>> getUserBasket(@PathVariable Long userId) {
+        List<BasketDTO> basketItems = productService.getUserBasket(userId);
+        return ResponseEntity.ok(basketItems);
     }
 }

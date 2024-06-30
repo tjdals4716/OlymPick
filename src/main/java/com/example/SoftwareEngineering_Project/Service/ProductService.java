@@ -18,7 +18,9 @@ public interface ProductService {
     List<ProductDTO> searchProductsByName(String name);
     BasketDTO addToBasket(Long userId, Long productId, Long quantity);
     BasketDTO removeFromBasket(Long userId, Long productId);
+    void removeAllFromBasket(Long userId, Long productId);
     List<DeliveryDTO> createDeliveryForBasket(Long userId, DeliveryStatus status);
     DeliveryDTO createDeliveryForBasketItem(Long userId, Long basketId, DeliveryStatus status);
     DeliveryDTO updateDeliveryStatus(Long deliveryId, DeliveryStatus status);
+    List<BasketDTO> getUserBasket(Long userId);
 }
