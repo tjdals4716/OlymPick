@@ -1,12 +1,16 @@
-// 로그인
+// 메인 페이지로 돌아가기 함수
+function goToMainPage() {
+    window.location.href = 'OlymPick 메인페이지.html'; // 메인 페이지로 이동
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    // 로그인 폼 처리
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // 기본 폼 제출 동작을 막음
+            event.preventDefault();
             const uid = document.getElementById('uid').value;
             const password = document.getElementById('password').value;
-
             const data = { uid, password };
 
             fetch('http://localhost:8080/users/login', {
@@ -22,10 +26,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 })
                 .then(data => {
-                    localStorage.setItem('userId', data.id); // 로그인된 사용자 ID 저장
-                    localStorage.setItem('nickname', data.nickname); // 사용자 닉네임 저장
+                    localStorage.setItem('userId', data.id);
+                    localStorage.setItem('nickname', data.nickname);
                     alert('로그인 성공');
-                    window.location.href = 'OlymPick 메인페이지.html'; // 로그인 성공 시 메인 페이지로 이동
+                    window.location.href = 'OlymPick 메인페이지.html';
                 })
                 .catch(error => {
                     console.error('로그인 에러:', error);
@@ -34,11 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 회원가입
+    // 회원가입 폼 처리
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // 기본 폼 제출 동작을 막음
+            event.preventDefault();
             const uid = document.getElementById('uid').value;
             const password = document.getElementById('password').value;
             const nickname = document.getElementById('nickname').value;
@@ -46,10 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const gender = document.getElementById('gender').value;
             const age = document.getElementById('age').value;
             const mbti = document.getElementById('mbti').value;
-
             const data = { uid, password, nickname, phoneNumber, gender, age, mbti };
 
-            console.log('회원가입 데이터:', data); // 요청 전 데이터 확인
+            console.log('회원가입 데이터:', data);
 
             fetch('http://localhost:8080/users', {
                 method: 'POST',
@@ -57,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(data),
             })
                 .then(response => {
-                    console.log('응답 상태 코드:', response.status); // 응답 상태 코드 확인
+                    console.log('응답 상태 코드:', response.status);
                     if (response.ok) {
                         return response.json();
                     } else {
@@ -65,12 +68,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 })
                 .then(data => {
-                    console.log('회원가입 성공 데이터:', data); // 성공 시 응답 데이터 확인
+                    console.log('회원가입 성공 데이터:', data);
                     alert('회원가입이 완료되었습니다!');
-                    window.location.href = 'OlymPick 로그인.html'; // 회원가입 성공 시 로그인 페이지로 이동
+                    window.location.href = 'OlymPick 로그인.html';
                 })
                 .catch(error => {
-                    console.error('회원가입 에러:', error); // 에러 메시지 확인
+                    console.error('회원가입 에러:', error);
                     alert('회원가입 실패');
                 });
         });
@@ -83,14 +86,19 @@ document.addEventListener('DOMContentLoaded', function() {
         usernameElement.textContent = `안녕하세요, ${nickname}님!`;
     }
 
-    // 상품 등록
+    // 장바구니 페이지 제목 업데이트
+    const cartTitle = document.getElementById('cart-title');
+    if (nickname && cartTitle) {
+        cartTitle.textContent = `${nickname}님의 장바구니`;
+    }
+
+    // 상품 등록 폼 처리
     const productRegisterForm = document.getElementById('product-register-form');
     if (productRegisterForm) {
         productRegisterForm.addEventListener('submit', function(event) {
             event.preventDefault();
-
-            const userId = localStorage.getItem('userId'); // 로그인된 사용자 ID 사용
-            console.log('userId:', userId); // userId 확인용 로그
+            const userId = localStorage.getItem('userId');
+            console.log('userId:', userId);
 
             if (!userId) {
                 alert('로그인이 필요합니다.');
@@ -103,10 +111,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 price: document.getElementById('product-price').value,
                 quantity: document.getElementById('product-quantity').value,
                 category: document.getElementById('product-category').value,
-                userId: userId // 로그인된 사용자 ID를 사용
+                userId: userId
             };
 
-            console.log('productData:', productData); // productData 확인용 로그
+            console.log('productData:', productData);
 
             const mediaFile = document.getElementById('product-media').files[0];
             const formData = new FormData();
@@ -126,9 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(data => {
                     alert('상품 등록 성공!');
-                    // 폼 초기화
                     productRegisterForm.reset();
-                    // 메인 페이지로 이동
                     window.location.href = 'OlymPick 메인페이지.html';
                 })
                 .catch(error => {
@@ -137,6 +143,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         });
     }
+
+    // 전체 상품 목록 로드
+    loadAllProducts();
+
+    // 카테고리 링크 클릭 이벤트 추가
+    const categoryLinks = document.querySelectorAll('.main-nav ul li a');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const category = this.textContent.trim().toUpperCase();
+            if (category === 'ALL') {
+                loadAllProducts();
+            } else {
+                loadProductsByCategory(category);
+            }
+        });
+    });
+
+    // 프로필 페이지 로드
+    if (window.location.pathname.includes('OlymPick 프로필.html')) {
+        loadProfile();
+    }
+
+    // 장바구니 페이지 로드
+    if (window.location.pathname.includes('OlymPick 장바구니.html')) {
+        loadBasketItems();
+    }
 });
 
 // 로그아웃
@@ -144,7 +177,7 @@ function logout() {
     localStorage.removeItem('userId');
     localStorage.removeItem('nickname');
     alert('로그아웃되었습니다.');
-    window.location.href = 'OlymPick 로그인.html'; // 로그아웃 후 로그인 페이지로 이동
+    window.location.href = 'OlymPick 로그인.html';
 }
 
 // 경매 입찰
@@ -155,19 +188,23 @@ function placeBid() {
 
 // 장바구니로 이동
 function goToCart() {
-    window.location.href = 'OlymPick 장바구니.html'; // 장바구니 페이지로 이동
+    window.location.href = 'OlymPick 장바구니.html';
 }
 
 // 전체 상품 목록 조회
 function loadAllProducts() {
-    document.querySelector('.goods-list-section h2').textContent = '전체 상품 목록'; // 제목 업데이트
+    const goodsListSection = document.querySelector('.goods-list-section h2');
+    if (goodsListSection) {
+        goodsListSection.textContent = '전체 상품 목록';
+    }
     fetch('http://localhost:8080/products')
         .then(response => response.json())
         .then(data => {
             const goodsList = document.getElementById('goods-list');
-            goodsList.innerHTML = ''; // 기존 상품 목록 초기화
+            if (!goodsList) return;
+            goodsList.innerHTML = '';
             if (data.length === 0) {
-                goodsList.innerHTML = '<p>상품이 존재하지 않습니다</p>'; // 상품이 없을 때 메시지 표시
+                goodsList.innerHTML = '<p>상품이 존재하지 않습니다</p>';
             } else {
                 data.forEach(product => {
                     const goodsItem = document.createElement('div');
@@ -176,7 +213,9 @@ function loadAllProducts() {
                         <img src="${product.mediaUrl}" alt="${product.name}">
                         <h3>${product.name}</h3>
                         <p>가격 : ₩${product.price}</p>
-                        <button onclick="viewProduct(${product.id})">상품 보기</button>
+                        <div class="button-container">
+                            <button onclick="viewProduct(${product.id})">상품 보기</button>
+                        </div>
                     `;
                     goodsList.appendChild(goodsItem);
                 });
@@ -187,14 +226,18 @@ function loadAllProducts() {
 
 // 특정 카테고리의 상품 목록 조회
 function loadProductsByCategory(category) {
-    document.querySelector('.goods-list-section h2').textContent = `${category} 상품 목록`; // 제목 업데이트
+    const goodsListSection = document.querySelector('.goods-list-section h2');
+    if (goodsListSection) {
+        goodsListSection.textContent = `${category} 상품 목록`;
+    }
     fetch(`http://localhost:8080/products/category/${category}`)
         .then(response => response.json())
         .then(data => {
             const goodsList = document.getElementById('goods-list');
-            goodsList.innerHTML = ''; // 기존 상품 목록 초기화
+            if (!goodsList) return;
+            goodsList.innerHTML = '';
             if (data.length === 0) {
-                goodsList.innerHTML = '<p>상품이 존재하지 않습니다</p>'; // 상품이 없을 때 메시지 표시
+                goodsList.innerHTML = '<p class="no-products">상품이 존재하지 않습니다</p>';
             } else {
                 data.forEach(product => {
                     const goodsItem = document.createElement('div');
@@ -212,27 +255,157 @@ function loadProductsByCategory(category) {
         .catch(error => console.error('카테고리별 상품 목록 로드 에러:', error));
 }
 
-// 카테고리 링크 클릭 이벤트 추가
-document.addEventListener('DOMContentLoaded', function() {
-    loadAllProducts(); // 기본 설정으로 전체 상품 목록 로드
-
-    const categoryLinks = document.querySelectorAll('.main-nav ul li a');
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            const category = this.textContent.trim().toUpperCase();
-            if (category === 'ALL') {
-                loadAllProducts();
-            } else {
-                loadProductsByCategory(category);
-            }
-        });
-    });
-});
-
 // 상품 보기 페이지로 이동
 function viewProduct(productId) {
     window.location.href = `OlymPick 상품정보.html?productId=${productId}`;
+}
+
+// 상품 장바구니에 추가
+function addToBasket() {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'OlymPick 로그인.html';
+        return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('productId');
+    const quantity = parseInt(document.getElementById('quantity').value);
+
+    fetch(`http://localhost:8080/products/basket/${userId}/${productId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: quantity })
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('장바구니 추가 실패');
+            }
+        })
+        .then(data => {
+            alert('상품이 장바구니에 담겼습니다.');
+        })
+        .catch(error => console.error('장바구니 추가 에러:', error));
+}
+
+// 장바구니 목록 조회
+function loadBasketItems() {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'OlymPick 로그인.html';
+        return;
+    }
+
+    fetch(`http://localhost:8080/products/basket/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            const pendingPurchasesList = document.getElementById('pending-purchases-list');
+            const shippingPurchasesList = document.getElementById('shipping-purchases-list');
+            const completedPurchasesList = document.getElementById('completed-purchases-list');
+
+            pendingPurchasesList.innerHTML = ''; // 기존 장바구니 목록 초기화
+            shippingPurchasesList.innerHTML = ''; // 기존 배송중인 목록 초기화
+            completedPurchasesList.innerHTML = ''; // 기존 구매 완료 목록 초기화
+
+            let hasPendingItems = false;
+            let hasShippingItems = false;
+            let hasCompletedItems = false;
+
+            data.forEach(item => {
+                const basketItem = document.createElement('li');
+                basketItem.className = 'basket-item';
+                basketItem.innerHTML = `
+                    <img src="${item.product.mediaUrl}" alt="${item.product.name}">
+                    <h3>${item.product.name}</h3>
+                    <p>가격 : ₩${item.product.price}</p>
+                    <p>수량 : ${item.count}</p>
+                    <div class="button-container">
+                        <button onclick="decreaseQuantity(${item.product.id})">하나만 빼기</button>
+                        <button onclick="removeAllFromBasket(${item.product.id})">전체 수량 빼기</button>
+                    </div>
+                `;
+
+                if (item.basketStatus === '배송준비중') {
+                    pendingPurchasesList.appendChild(basketItem);
+                    hasPendingItems = true;
+                } else if (item.basketStatus === '배송중') {
+                    shippingPurchasesList.appendChild(basketItem);
+                    hasShippingItems = true;
+                } else if (item.basketStatus === '구매완료') {
+                    completedPurchasesList.appendChild(basketItem);
+                    hasCompletedItems = true;
+                }
+            });
+
+            if (!hasPendingItems) {
+                pendingPurchasesList.innerHTML = '<p class="no-items">구매 대기중인 상품이 없습니다</p>';
+            }
+            if (!hasShippingItems) {
+                shippingPurchasesList.innerHTML = '<p class="no-items">배송중인 상품이 없습니다</p>';
+            }
+            if (!hasCompletedItems) {
+                completedPurchasesList.innerHTML = '<p class="no-items">구매 완료된 상품이 없습니다</p>';
+            }
+        })
+        .catch(error => console.error('장바구니 목록 로드 에러:', error));
+}
+
+// 장바구니 상품 전체 제거
+function removeAllFromBasket(productId) {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'OlymPick 로그인.html';
+        return;
+    }
+
+    const confirmation = confirm('해당 상품을 장바구니에서 모두 빼시겠습니까?');
+    if (!confirmation) {
+        return;
+    }
+
+    fetch(`http://localhost:8080/products/basket/${userId}/${productId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+    })
+        .then(response => {
+            if (response.ok) {
+                loadBasketItems();
+            } else {
+                throw new Error('장바구니 제거 실패');
+            }
+        })
+        .catch(error => console.error('장바구니 제거 에러:', error));
+}
+
+// 장바구니에서 상품 제거
+function decreaseQuantity(productId) {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'OlymPick 로그인.html';
+        return;
+    }
+
+    fetch(`http://localhost:8080/products/basket/${userId}/${productId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (response.ok) {
+                loadBasketItems();
+            } else {
+                throw new Error('장바구니 제거 실패');
+            }
+        })
+        .catch(error => console.error('장바구니 제거 에러:', error));
 }
 
 // 상품 정보 조회
@@ -251,10 +424,19 @@ function loadProductDetails() {
                     <p>${data.content}</p>
                     <p>가격 : ₩${data.price}</p>
                     <p>재고 : ${data.quantity}개</p>
-                    <button class="review-button" onclick="goToReviewPage(${productId})">리뷰 작성하기</button>
+                </div>
+                <div class="quantity-action-container">
+                    <div class="quantity-container">
+                        <label for="quantity">수량 : </label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="cart-button" onclick="addToBasket(${productId})">장바구니에 담기</button>
+                        <button class="purchase-button" onclick="purchaseProduct(${productId})">구매하기</button>
+                    </div>
                 </div>
             `;
-                loadReviews(productId); // 상품 정보를 로드한 후 리뷰도 로드
+                loadReviews(productId);
             })
             .catch(error => console.error('상품 정보 로드 에러:', error));
     }
@@ -266,25 +448,29 @@ function loadReviews(productId) {
         .then(response => response.json())
         .then(data => {
             const reviewList = document.getElementById('reviews');
-            reviewList.innerHTML = ''; // 기존 리뷰 목록 초기화
-            data.forEach(review => {
-                const reviewItem = document.createElement('div');
-                reviewItem.className = 'review-item';
-                reviewItem.innerHTML = `
-                <div class="review-header">
-                    <h4>${review.title}</h4>
-                    <p><strong>작성자 :</strong> ${review.user.nickname}</p>
-                </div>
-                ${review.mediaUrl ? `<img src="${review.mediaUrl}" alt="리뷰 이미지">` : ''}
-                <p>${review.content}</p>
-                <div class="review-footer">
-                    <p>좋아요 : ${review.likes}</p>
-                    <p>작성시간 : ${new Date(review.statusDateTime).toLocaleString()}</p>
-                    <button class="like-button" onclick="toggleLike(${review.id})">좋아요</button>
-                </div>
-            `;
-                reviewList.appendChild(reviewItem);
-            });
+            reviewList.innerHTML = '';
+            if (data.length === 0) {
+                reviewList.innerHTML = '<p class="no-reviews">아직 리뷰가 없습니다</p>';
+            } else {
+                data.forEach(review => {
+                    const reviewItem = document.createElement('div');
+                    reviewItem.className = 'review-item';
+                    reviewItem.innerHTML = `
+                        <div class="review-header">
+                            <h4>${review.title}</h4>
+                            <p><strong>작성자 :</strong> ${review.user.nickname}</p>
+                        </div>
+                        ${review.mediaUrl ? `<img src="${review.mediaUrl}" alt="리뷰 이미지">` : ''}
+                        <p>${review.content}</p>
+                        <div class="review-footer">
+                            <p>좋아요 : ${review.likes}</p>
+                            <p>작성시간 : ${new Date(review.statusDateTime).toLocaleString()}</p>
+                            <button class="like-button" onclick="toggleLike(${review.id})">좋아요</button>
+                        </div>
+                    `;
+                    reviewList.appendChild(reviewItem);
+                });
+            }
         })
         .catch(error => console.error('리뷰 로드 에러:', error));
 }
@@ -296,14 +482,14 @@ function goToReviewPage(productId) {
 
 // 리뷰 좋아요
 function toggleLike(reviewId) {
-    const userId = localStorage.getItem('userId'); // 로그인된 사용자 ID 사용
+    const userId = localStorage.getItem('userId');
     fetch(`http://localhost:8080/reviews/likes/${userId}/${reviewId}`, {
         method: 'POST'
     })
         .then(response => response.json())
         .then(data => {
             const productId = new URLSearchParams(window.location.search).get('productId');
-            loadReviews(productId); // 좋아요 업데이트 후 리뷰 목록 다시 로드
+            loadReviews(productId);
         })
         .catch(error => console.error('좋아요 에러:', error));
 }
@@ -366,7 +552,7 @@ function loadProfile() {
             document.getElementById('profile-age').textContent = data.age;
             document.getElementById('profile-mbti').textContent = data.mbti;
         })
-        .catch(error => console.error('프로필 로드 에러 :', error));
+        .catch(error => console.error('프로필 로드 에러:', error));
 }
 
 // 회원 탈퇴
@@ -396,4 +582,29 @@ function deleteAccount() {
         .catch(error => console.error('회원 탈퇴 에러:', error));
 }
 
-
+// 경매 목록 조회
+function loadAuctions() {
+    fetch('http://localhost:8080/auctions')
+        .then(response => response.json())
+        .then(data => {
+            const auctionList = document.getElementById('auction-list');
+            if (!auctionList) return;
+            auctionList.innerHTML = '';
+            if (data.length === 0) {
+                auctionList.innerHTML = '<p class="no-auctions">현재 진행 중인 경매가 없습니다</p>';
+            } else {
+                data.forEach(auction => {
+                    const auctionItem = document.createElement('div');
+                    auctionItem.className = 'auction-item';
+                    auctionItem.innerHTML = `
+                        <h3>${auction.name}</h3>
+                        <p>현재 입찰가: ₩${auction.currentBid}</p>
+                        <input type="number" placeholder="입찰 금액 입력">
+                        <button onclick="placeBid(${auction.id})">입찰하기</button>
+                    `;
+                    auctionList.appendChild(auctionItem);
+                });
+            }
+        })
+        .catch(error => console.error('경매 목록 로드 에러:', error));
+}
