@@ -3,6 +3,7 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    font-size: 16px; /* 기본 글씨 크기 원래대로 */
 }
 
 .main-container {
@@ -30,13 +31,16 @@ header {
     margin-right: 15px;
 }
 
-.main-nav ul li a {
+.main-nav ul li button {
+    background: none;
+    border: none;
     color: white;
-    text-decoration: none;
     font-weight: bold;
+    font-size: 1.5em; /* 버튼 글씨 크기 증가 */
+    cursor: pointer;
 }
 
-.main-nav ul li a:hover {
+.main-nav ul li button:hover {
     text-decoration: underline;
 }
 
@@ -48,6 +52,11 @@ header {
     text-align: center;
 }
 
+.product-details-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
 .product-details {
     background-color: white;
     padding: 20px;
@@ -55,6 +64,9 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .product-info {
@@ -66,7 +78,9 @@ header {
 
 .product-info img {
     max-width: 100%;
-    height: auto;
+    width: 300px; /* 일정한 너비 설정 */
+    height: 300px; /* 일정한 높이 설정 */
+    object-fit: cover; /* 이미지 비율을 유지하면서 크기에 맞추기 */
     border-radius: 8px;
     margin-bottom: 20px;
 }
@@ -83,10 +97,35 @@ header {
     color: #666;
 }
 
+.quantity-action-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.quantity-container {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.quantity-container label {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.quantity-container input {
+    width: 60px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
 .action-buttons {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
 }
 
 .cart-button, .purchase-button {
@@ -97,7 +136,8 @@ header {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    margin: 10px;
+    margin: 10px 5px; /* 버튼 사이의 간격 조정 */
+    width: 150px; /* 버튼 크기를 동일하게 설정 */
     transition: background-color 0.3s ease;
 }
 
@@ -110,6 +150,33 @@ header {
     max-width: 800px;
     margin: 20px auto;
     text-align: left;
+}
+
+.reviews-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.review-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.review-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.review-button:hover {
+    background-color: #0056b3;
 }
 
 .review-item {
@@ -141,7 +208,9 @@ header {
 
 .review-item img {
     max-width: 100%;
-    height: auto;
+    width: 300px; /* 일정한 너비 설정 */
+    height: 300px; /* 일정한 높이 설정 */
+    object-fit: cover; /* 이미지 비율을 유지하면서 크기에 맞추기 */
     border-radius: 8px;
     margin-top: 10px;
 }
@@ -174,18 +243,10 @@ header {
     background-color: #ff5252;
 }
 
-.review-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+/* 리뷰 없을때 글 정렬 */
+.no-reviews {
+    text-align: center;
     margin-top: 20px;
-    transition: background-color 0.3s ease;
-}
-
-.review-button:hover {
-    background-color: #0056b3;
+    font-size: 1.2em;
+    color: #555;
 }

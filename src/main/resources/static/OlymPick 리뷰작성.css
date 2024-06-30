@@ -3,6 +3,7 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    font-size: 16px; /* 기본 글씨 크기 원래대로 */
 }
 
 .main-container {
@@ -30,13 +31,16 @@ header {
     margin-right: 15px;
 }
 
-.main-nav ul li a {
+.main-nav ul li button {
+    background: none;
+    border: none;
     color: white;
-    text-decoration: none;
     font-weight: bold;
+    font-size: 1.5em; /* 버튼 글씨 크기*/
+    cursor: pointer;
 }
 
-.main-nav ul li a:hover {
+.main-nav ul li button:hover {
     text-decoration: underline;
 }
 
@@ -46,6 +50,11 @@ header {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-form-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
 }
 
 .form-group {
