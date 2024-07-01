@@ -79,6 +79,7 @@ header {
     resize: vertical;
 }
 
+/* 리뷰작성 버튼 */
 button[type="submit"] {
     background-color: #5cb85c;
     color: white;

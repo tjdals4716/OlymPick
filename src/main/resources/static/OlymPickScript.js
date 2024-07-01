@@ -408,40 +408,6 @@ function decreaseQuantity(productId) {
         .catch(error => console.error('장바구니 제거 에러:', error));
 }
 
-// 상품 정보 조회
-function loadProductDetails() {
-    const params = new URLSearchParams(window.location.search);
-    const productId = params.get('productId');
-    if (productId) {
-        fetch(`http://localhost:8080/products/${productId}`)
-            .then(response => response.json())
-            .then(data => {
-                const productDetails = document.getElementById('product-details');
-                productDetails.innerHTML = `
-                <div class="product-info">
-                    <img src="${data.mediaUrl}" alt="${data.name}">
-                    <h3>${data.name}</h3>
-                    <p>${data.content}</p>
-                    <p>가격 : ₩${data.price}</p>
-                    <p>재고 : ${data.quantity}개</p>
-                </div>
-                <div class="quantity-action-container">
-                    <div class="quantity-container">
-                        <label for="quantity">수량 : </label>
-                        <input type="number" id="quantity" name="quantity" min="1" value="1">
-                    </div>
-                    <div class="action-buttons">
-                        <button class="cart-button" onclick="addToBasket(${productId})">장바구니에 담기</button>
-                        <button class="purchase-button" onclick="purchaseProduct(${productId})">구매하기</button>
-                    </div>
-                </div>
-            `;
-                loadReviews(productId);
-            })
-            .catch(error => console.error('상품 정보 로드 에러:', error));
-    }
-}
-
 // 리뷰 조회
 function loadReviews(productId) {
     fetch(`http://localhost:8080/reviews/product/${productId}`)
@@ -475,11 +441,6 @@ function loadReviews(productId) {
         .catch(error => console.error('리뷰 로드 에러:', error));
 }
 
-// 리뷰 작성 페이지로 이동
-function goToReviewPage(productId) {
-    window.location.href = `OlymPick 리뷰작성.html?productId=${productId}`;
-}
-
 // 리뷰 좋아요
 function toggleLike(reviewId) {
     const userId = localStorage.getItem('userId');
@@ -494,6 +455,51 @@ function toggleLike(reviewId) {
         .catch(error => console.error('좋아요 에러:', error));
 }
 
+// 상품 정보 조회
+function loadProductDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('productId');
+    if (productId) {
+        fetch(`http://localhost:8080/products/${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                const productDetails = document.getElementById('product-details');
+                productDetails.innerHTML = `
+                <div class="product-info">
+                    <img src="${data.mediaUrl}" alt="${data.name}">
+                    <h3>${data.name}</h3>
+                    <p>${data.content}</p>
+                    <p>가격 : ₩${data.price}</p>
+                    <p>재고 : ${data.quantity}개</p>
+                </div>
+                <div class="quantity-action-container">
+                    <div class="quantity-container">
+                        <label for="quantity">수량 : </label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="cart-button" onclick="addToBasket(${productId})">장바구니에 담기</button>
+                        <button class="purchase-button" onclick="purchaseProduct(${productId})">구매하기</button>
+                    </div>
+                </div>
+            `;
+                loadReviews(productId); // 상품 정보를 로드한 후 리뷰도 로드
+            })
+            .catch(error => console.error('상품 정보 로드 에러:', error));
+    }
+}
+
+function goToReviewPage() {
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('productId');
+    if (!productId) {
+        console.error('상품 ID를 URL에서 찾을 수 없습니다.');
+        alert('상품 ID를 URL에서 찾을 수 없습니다.');
+        return;
+    }
+    window.location.href = `OlymPick 리뷰작성.html?productId=${productId}`;
+}
+
 // 리뷰 작성
 document.addEventListener("DOMContentLoaded", function() {
     const reviewForm = document.getElementById('review-form');
@@ -502,7 +508,15 @@ document.addEventListener("DOMContentLoaded", function() {
             event.preventDefault();
 
             const userId = localStorage.getItem('userId'); // 로그인된 사용자 ID 사용
-            const productId = new URLSearchParams(window.location.search).get('productId'); // URL에서 productId 추출
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('productId'); // URL에서 productId 추출
+
+            if (!productId) {
+                console.error('상품 ID를 URL에서 찾을 수 없습니다.');
+                alert('상품 ID를 URL에서 찾을 수 없습니다.');
+                return;
+            }
+
             const reviewData = {
                 title: document.getElementById('review-title').value,
                 content: document.getElementById('review-content').value,
@@ -515,7 +529,7 @@ document.addEventListener("DOMContentLoaded", function() {
             formData.append('reviewData', JSON.stringify(reviewData));
             formData.append('mediaFile', mediaFile);
 
-            fetch('http://localhost:8080/reviews', {
+            fetch(`http://localhost:8080/reviews`, {
                 method: 'POST',
                 body: formData
             })
