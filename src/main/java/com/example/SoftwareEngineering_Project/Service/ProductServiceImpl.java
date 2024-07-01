@@ -143,7 +143,6 @@ public class ProductServiceImpl implements ProductService {
                 Long newQuantity = existingBasketItem.getCount() - 1L;
                 existingBasketItem.setCount(newQuantity);
 
-                // BasketStatus 업데이트
                 if (existingBasketItem.getBasketStatus() == BasketStatus.구매완료) {
                     existingBasketItem.setBasketStatus(BasketStatus.배송준비중);
                 }
@@ -153,7 +152,6 @@ public class ProductServiceImpl implements ProductService {
                 logger.info("장바구니에 상품의 개수가 감소하였습니다 " + savedBasket);
                 return BasketDTO.entityToDto(savedBasket);
             } else {
-                // BasketStatus 업데이트
                 if (existingBasketItem.getBasketStatus() == BasketStatus.구매완료) {
                     existingBasketItem.setBasketStatus(BasketStatus.배송준비중);
                     basketRepository.save(existingBasketItem);
@@ -168,7 +166,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    // 상품 장바구니에서 전체 개수 제거
+    //상품 장바구니에서 전체 개수 제거
     @Override
     public void removeAllFromBasket(Long userId, Long productId) {
         BasketEntity existingBasketItem = basketRepository.findByUser_IdAndProduct_Id(userId, productId);
